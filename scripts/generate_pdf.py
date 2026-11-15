@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Technical Blueprint & Crochet Pattern Guide Generator
+Technical Blueprint & Crochet Pattern Guide Generator (v2.0.0)
 Reads master specifications from `src/data/project_specs.json` and multi-angle 3D
 renders from `assets/renders/`, applies smart in-memory background cropping via
 Pillow, and outputs `output/Pokemon_Tumbler_Case_Guide.pdf`.
@@ -130,29 +130,29 @@ def make_styles() -> dict[str, ParagraphStyle]:
         "banner_subtitle": ParagraphStyle(
             "banner_subtitle",
             fontName=FONT_REGULAR,
-            fontSize=9.5,
-            leading=13.5,
+            fontSize=9.3,
+            leading=13.0,
             textColor=colors.HexColor("#CBD5E1"),
         ),
         "kpi_label": ParagraphStyle(
             "kpi_label",
             fontName=FONT_BOLD,
-            fontSize=7,
-            leading=9.5,
+            fontSize=6.9,
+            leading=9.2,
             textColor=INK_MUTED,
         ),
         "kpi_value": ParagraphStyle(
             "kpi_value",
             fontName=FONT_BOLD,
-            fontSize=10,
-            leading=13,
+            fontSize=9.8,
+            leading=12.5,
             textColor=INK_DARK,
         ),
         "kpi_sub": ParagraphStyle(
             "kpi_sub",
             fontName=FONT_REGULAR,
-            fontSize=7.2,
-            leading=9.5,
+            fontSize=7.0,
+            leading=9.3,
             textColor=INK_MUTED,
         ),
         "sec_kicker": ParagraphStyle(
@@ -165,106 +165,106 @@ def make_styles() -> dict[str, ParagraphStyle]:
         "sec_title": ParagraphStyle(
             "sec_title",
             fontName=FONT_BOLD,
-            fontSize=13,
-            leading=16.5,
+            fontSize=12.8,
+            leading=16.0,
             textColor=INK_DARK,
         ),
         "sec_sub": ParagraphStyle(
             "sec_sub",
             fontName=FONT_REGULAR,
-            fontSize=8.5,
-            leading=11.5,
+            fontSize=8.3,
+            leading=11.3,
             textColor=INK_MUTED,
         ),
         "h3": ParagraphStyle(
             "h3",
             fontName=FONT_BOLD,
-            fontSize=10.5,
-            leading=14,
+            fontSize=10.3,
+            leading=13.5,
             textColor=INK_DARK,
-            spaceBefore=4,
-            spaceAfter=3,
+            spaceBefore=3,
+            spaceAfter=2.5,
         ),
         "body": ParagraphStyle(
             "body",
             fontName=FONT_REGULAR,
-            fontSize=8.5,
-            leading=12.2,
+            fontSize=8.4,
+            leading=12.0,
             textColor=INK_BODY,
         ),
         "body_sm": ParagraphStyle(
             "body_sm",
             fontName=FONT_REGULAR,
-            fontSize=7.8,
-            leading=10.8,
+            fontSize=7.7,
+            leading=10.6,
             textColor=INK_BODY,
         ),
         "caption": ParagraphStyle(
             "caption",
             fontName=FONT_REGULAR,
-            fontSize=7.5,
-            leading=10.0,
+            fontSize=7.4,
+            leading=9.8,
             textColor=INK_BODY,
             alignment=TA_LEFT,
         ),
         "th": ParagraphStyle(
             "th",
             fontName=FONT_BOLD,
-            fontSize=7.7,
-            leading=10.0,
+            fontSize=7.6,
+            leading=9.8,
             textColor=colors.white,
         ),
         "th_center": ParagraphStyle(
             "th_center",
             fontName=FONT_BOLD,
-            fontSize=7.7,
-            leading=10.0,
+            fontSize=7.6,
+            leading=9.8,
             textColor=colors.white,
             alignment=TA_CENTER,
         ),
         "th_right": ParagraphStyle(
             "th_right",
             fontName=FONT_BOLD,
-            fontSize=7.7,
-            leading=10.0,
+            fontSize=7.6,
+            leading=9.8,
             textColor=colors.white,
             alignment=TA_RIGHT,
         ),
         "td": ParagraphStyle(
             "td",
             fontName=FONT_REGULAR,
-            fontSize=7.5,
-            leading=10.0,
+            fontSize=7.4,
+            leading=9.8,
             textColor=INK_BODY,
         ),
         "td_bold": ParagraphStyle(
             "td_bold",
             fontName=FONT_BOLD,
-            fontSize=7.5,
-            leading=10.0,
+            fontSize=7.4,
+            leading=9.8,
             textColor=INK_DARK,
         ),
         "td_center": ParagraphStyle(
             "td_center",
             fontName=FONT_REGULAR,
-            fontSize=7.5,
-            leading=10.0,
+            fontSize=7.4,
+            leading=9.8,
             textColor=INK_BODY,
             alignment=TA_CENTER,
         ),
         "td_right": ParagraphStyle(
             "td_right",
             fontName=FONT_BOLD,
-            fontSize=7.5,
-            leading=10.0,
+            fontSize=7.4,
+            leading=9.8,
             textColor=INK_DARK,
             alignment=TA_RIGHT,
         ),
         "cat_row": ParagraphStyle(
             "cat_row",
             fontName=FONT_BOLD,
-            fontSize=7.7,
-            leading=10.2,
+            fontSize=7.6,
+            leading=10.0,
             textColor=INK_DARK,
         ),
         "link": ParagraphStyle(
@@ -278,43 +278,43 @@ def make_styles() -> dict[str, ParagraphStyle]:
         "callout_title": ParagraphStyle(
             "callout_title",
             fontName=FONT_BOLD,
-            fontSize=8.8,
-            leading=11.8,
+            fontSize=8.6,
+            leading=11.4,
             textColor=INK_DARK,
         ),
         "callout_body": ParagraphStyle(
             "callout_body",
             fontName=FONT_REGULAR,
-            fontSize=7.9,
-            leading=11.2,
+            fontSize=7.7,
+            leading=10.8,
             textColor=INK_BODY,
         ),
         "zone_title": ParagraphStyle(
             "zone_title",
             fontName=FONT_BOLD,
-            fontSize=9.1,
-            leading=12.0,
+            fontSize=9.0,
+            leading=11.8,
             textColor=colors.white,
         ),
         "zone_meta": ParagraphStyle(
             "zone_meta",
             fontName=FONT_REGULAR,
-            fontSize=7.6,
-            leading=10.4,
+            fontSize=7.5,
+            leading=10.2,
             textColor=INK_BODY,
         ),
         "zone_note": ParagraphStyle(
             "zone_note",
             fontName=FONT_REGULAR,
-            fontSize=7.7,
-            leading=10.6,
+            fontSize=7.6,
+            leading=10.4,
             textColor=INK_DARK,
         ),
         "zone_step": ParagraphStyle(
             "zone_step",
             fontName=FONT_REGULAR,
-            fontSize=7.8,
-            leading=11.0,
+            fontSize=7.7,
+            leading=10.8,
             textColor=INK_BODY,
             leftIndent=8,
             firstLineIndent=-8,
@@ -354,16 +354,16 @@ class NumberedBlueprintCanvas(pdfcanvas.Canvas):
             self.line(MARGIN_L, PAGE_H - 11.5 * mm, PAGE_W - MARGIN_R, PAGE_H - 11.5 * mm)
             self.setFont(FONT_BOLD, 7.2)
             self.setFillColor(INK_MUTED)
-            self.drawString(MARGIN_L, PAGE_H - 10 * mm, "POKEMON 3D CROCHET TUMBLER CASE  |  BLUEPRINT TEKNIS & PANDUAN PERAJUT")
+            self.drawString(MARGIN_L, PAGE_H - 10 * mm, "POKEMON 3D CROCHET TUMBLER CASE  |  BLUEPRINT TEKNIS v2.0 & PANDUAN PERAJUT")
             self.setFont(FONT_REGULAR, 7.2)
-            self.drawRightString(PAGE_W - MARGIN_R, PAGE_H - 10 * mm, "Cuculemon 1L (Ø 8.0 × 32.0 cm) • Beban 1.3 kg")
+            self.drawRightString(PAGE_W - MARGIN_R, PAGE_H - 10 * mm, "Cuculemon 1L (Ø 8.0 × 32.0 cm) • Case 27.8 cm • Beban 1.3 kg")
 
         self.setStrokeColor(BORDER_SLATE)
         self.setLineWidth(0.5)
         self.line(MARGIN_L, 11 * mm, PAGE_W - MARGIN_R, 11 * mm)
         self.setFont(FONT_REGULAR, 7.2)
         self.setFillColor(INK_MUTED)
-        self.drawString(MARGIN_L, 7.5 * mm, "Sceptile (Jukain) & Dragonite (Kairyu) • Polycherry D27 • Tali Pendek 30 cm & Tali Panjang 100 cm")
+        self.drawString(MARGIN_L, 7.5 * mm, "Sceptile (Jukain) & Dragonite (Kairyu) • Polycherry D27 • Ring Silikon Ø 5.7 cm + Tali 30 cm / 100 cm")
         self.setFont(FONT_BOLD, 7.4)
         self.setFillColor(INK_DARK)
         self.drawRightString(PAGE_W - MARGIN_R, 7.5 * mm, f"Halaman {page_num} dari {total_pages}")
@@ -566,8 +566,8 @@ def section_banner(
                 ("LINEBEFORE", (0, 0), (0, 0), 4.0, accent),
                 ("LEFTPADDING", (0, 0), (0, 0), 11),
                 ("RIGHTPADDING", (0, 0), (0, 0), 10),
-                ("TOPPADDING", (0, 0), (0, 0), 7),
-                ("BOTTOMPADDING", (0, 0), (0, 0), 7),
+                ("TOPPADDING", (0, 0), (0, 0), 6.5),
+                ("BOTTOMPADDING", (0, 0), (0, 0), 6.5),
             ]
         )
     )
@@ -584,7 +584,7 @@ def callout_box(
     """Create a clean highlighted callout box with left accent bar."""
     content = [
         Paragraph(title_html, styles["callout_title"]),
-        Spacer(1, 2.5),
+        Spacer(1, 2.2),
         Paragraph(body_html, styles["callout_body"]),
     ]
     tbl = Table([[content]], colWidths=[CONTENT_W])
@@ -597,8 +597,8 @@ def callout_box(
                 ("LINEBEFORE", (0, 0), (0, 0), 3.8, accent),
                 ("LEFTPADDING", (0, 0), (0, 0), 10),
                 ("RIGHTPADDING", (0, 0), (0, 0), 10),
-                ("TOPPADDING", (0, 0), (0, 0), 7),
-                ("BOTTOMPADDING", (0, 0), (0, 0), 7),
+                ("TOPPADDING", (0, 0), (0, 0), 6.5),
+                ("BOTTOMPADDING", (0, 0), (0, 0), 6.5),
             ]
         )
     )
@@ -606,12 +606,12 @@ def callout_box(
 
 
 # ---------------------------------------------------------------------------
-# Indonesian Localization Maps (Preserving 100% JSON Metrics & Stitch Counts)
+# Indonesian Localization Maps (100% Synced to project_specs.json v2.0.0)
 # ---------------------------------------------------------------------------
 YARN_USAGE_ID: dict[tuple[str, str], dict[str, str]] = {
     ("sceptile", "#68C481"): {
         "short_name": "Hijau Mint / Emerald",
-        "usage": "Silinder bodi utama Ø 8.0 cm, alas, kerah leher Ø 5.8 cm, lengan/kaki, bilah daun bawah, & jambul kepala",
+        "usage": "Silinder bodi utama Ø 8.0 cm, alas, kerah leher Ø 5.8 cm, 4 simpul pengikat ring silikon, lengan/kaki, bilah daun bawah, jambul, & strap",
     },
     ("sceptile", "#438D5A"): {
         "short_name": "Hijau Tua Forest",
@@ -619,7 +619,7 @@ YARN_USAGE_ID: dict[tuple[str, str], dict[str, str]] = {
     },
     ("sceptile", "#D6615D"): {
         "short_name": "Merah Bata / Coral",
-        "usage": "Sabuk perut (belly belt), aksen rahang bawah, garis kelopak mata bawah, & selongsong ujung strap",
+        "usage": "Sabuk perut (belly belt), aksen rahang bawah, garis kelopak mata bawah, manik ujung tali serut (bead tips), & selongsong ujung strap",
     },
     ("sceptile", "#E4D17C"): {
         "short_name": "Kuning Muda Emas",
@@ -631,11 +631,11 @@ YARN_USAGE_ID: dict[tuple[str, str], dict[str, str]] = {
     },
     ("dragonite", "#EC9D41"): {
         "short_name": "Oranye Emas",
-        "usage": "Bodi belakang/samping Ø 8.0 cm, alas, kerah leher, ekor gemuk, kaki/tangan, rangka sayap, & tanduk",
+        "usage": "Bodi utama Ø 8.0 cm, alas, kerah leher, 4 simpul pengikat ring silikon, ekor gemuk, kaki/tangan, rangka sayap, tanduk, & strap",
     },
     ("dragonite", "#EAD8B3"): {
         "short_name": "Krem / Ivory",
-        "usage": "Panel perut bergaris 11 rusuk, panel bawah ekor bergaris, & 2 antena lengkung-S di dahi",
+        "usage": "Panel perut bergaris 12 rusuk, panel bawah ekor 8 rusuk, manik ujung tali serut, & 2 antena lengkung-S di dahi",
     },
     ("dragonite", "#167B75"): {
         "short_name": "Hijau Tosca Tua",
@@ -670,89 +670,90 @@ ZONE_ID_CONTENT: dict[tuple[str, str], dict[str, Any]] = {
     },
     ("sceptile", "zone-2"): {
         "title": "Zona 2: Silinder Bodi Lurus, Sabuk Perut Coral & Pangkal Ekor",
-        "badge": "Tinggi 0.0–20.0 cm  |  Ø 8.0 cm (Keliling 25.13 cm)",
+        "badge": "Tinggi 0.0–21.5 cm  |  Ø 8.0 cm (Kll. 25.13 cm)",
         "stitches": "1 Helai: 60 sc keliling  |  2 Helai: 40 sc keliling",
-        "rows": "1 Helai: 52 baris  |  2 Helai: 36 baris",
+        "rows": "1 Helai: 56 baris  |  2 Helai: 39 baris",
         "colors": "Hijau Mint (#68C481), Merah Coral (#D6615D), Hijau Tua (#438D5A)",
         "load_note": (
-            "Tusukan Yarn-Under SC (YU-SC) rapat menjaga keliling tepat 25.13 cm memeluk dinding stainless steel Ø 8.0 cm. "
-            "Area atas Zona 2 (tinggi 19.5–20.0 cm) menjadi titik jahit ujung bawah 2 tab Webbing Nylon 1.5 cm."
+            "Tusukan Yarn-Under SC (YU-SC) rapat membentuk selongsong silinder kaku berkeliling tepat 25.13 cm "
+            "yang memeluk penuh dinding stainless steel 0.0–21.5 cm agar beban vertikal terbagi merata melalui gesekan dinding tanpa melorot."
         ),
         "steps": [
             "Kerjakan silinder lurus dengan YU-SC rapat: Baris 1–11 (1 helai) atau Baris 1–7 (2 helai) memakai Hijau Mint (#68C481).",
-            "Sabuk Perut Merah Coral (tinggi ~4.5–7.8 cm): Pada Baris 12–19 (1 helai) atau Baris 8–13 (2 helai), ganti 38 st bagian depan/samping (25 st pada 2 helai) menjadi Merah Coral (#D6615D) dan biarkan 22 st belakang Hijau Mint (atau buat pita melingkar penuh sesuai selera).",
-            "Baris 20–52 (1 helai) / Baris 14–36 (2 helai): Lanjutkan Hijau Mint lurus hingga tinggi 20.0 cm. Tambahkan garis tulang punggung vertikal 3 st dengan Hijau Tua (#438D5A) di tengah belakang (st 29–31) via surface slip stitch atau intarsia.",
-            "Awal Kerah V Dada (17.5–20.0 cm): Pada Baris 46–52 di tengah depan, mulai garis V Hijau Tua (#438D5A) yang mengerucut ke titik tengah dada.",
+            "Sabuk Perut Merah Coral (tinggi ~4.5–8.0 cm): Pada Baris 12–21 (1 helai) atau Baris 8–14 (2 helai), ganti 38 st bagian depan/samping (25 st pada 2 helai) menjadi Merah Coral (#D6615D) sambil mempertahankan 22 st belakang tetap Hijau Mint.",
+            "Baris 22–56 (1 helai) / Baris 15–39 (2 helai): Lanjutkan Hijau Mint lurus hingga tinggi 21.5 cm. Tambahkan garis tulang punggung vertikal 3 st dengan Hijau Tua (#438D5A) di tengah belakang (st 29–31) via surface slip stitch atau intarsia.",
+            "Awal Kerah V Dada (19.0–21.5 cm): Pada Baris 49–56 di tengah depan, mulai garis V Hijau Tua (#438D5A) yang mengerucut ke titik tengah dada.",
         ],
     },
     ("sceptile", "zone-3"): {
-        "title": "Zona 3: Bahu Tirus, Puncak Kerah V & Jembatan Webbing Penahan Beban",
-        "badge": "Tinggi 20.0–25.5 cm  |  Ø 8.0 → 5.8 cm",
+        "title": "Zona 3: Bahu Kubah Cembung & Puncak Kerah V Dada",
+        "badge": "Tinggi 21.5–24.8 cm  |  Ø 8.0 → 5.7 cm",
         "stitches": "1 Helai: 60 sc → 44 sc  |  2 Helai: 40 sc → 28 sc",
-        "rows": "1 Helai: 14 baris  |  2 Helai: 10 baris",
+        "rows": "1 Helai: 9 baris  |  2 Helai: 6 baris",
         "colors": "Hijau Mint (#68C481), Hijau Tua Forest (#438D5A)",
         "load_note": (
-            "KRITIS: Jangan mengandalkan tusuk pengurangan rajutan saja untuk menahan beban 1.3 kg. Sebelum menutup Zona 4, "
-            "jahit ujung ekor vertikal 6.0 cm dari dua pita Webbing Nylon 1.5 cm di dinding dalam sisi kiri (jam 9) & kanan (jam 3) "
-            "dari tinggi 25.5 cm turun hingga 19.5 cm di bodi Ø 8.0 cm menggunakan jahitan X-box benang nylon tas."
+            "Mengikuti persis profil kubah cembung botol Cuculemon 1L (tinggi 21.5–24.8 cm, panjang lengkung 3.3 cm). "
+            "Karena Ring Silikon pada Zona 4 menumpu beban 1.3 kg langsung di bawah bibir tutup Ø ~6.0 cm, "
+            "tusukan pengurangan bahu Zona 3 terbebas dari tarikan beban tali (0% melar ke atas)."
         ),
         "steps": [
-            "Jadwal Pengurangan 1 Helai (14 baris, 60 → 44 sc): R1–2 sc 60; R3 (13 sc, dec)×4 (56); R4–5 sc 56; R6 (12 sc, dec)×4 (52); R7–8 sc 52; R9 (11 sc, dec)×4 (48); R10–11 sc 48; R12 (10 sc, dec)×4 (44); R13–14 sc 44.",
-            "Jadwal Pengurangan 2 Helai (10 baris, 40 → 28 sc): R1 sc 40; R2 (8 sc, dec)×4 (36); R3–4 sc 36; R5 (7 sc, dec)×4 (32); R6–7 sc 32; R8 (6 sc, dec)×4 (28); R9–10 sc 28.",
-            "Selesaikan bingkai kerah V Hijau Tua (#438D5A) membungkus bahu kiri/kanan menuju ujung lancip V di tengah depan tinggi ~19.5 cm.",
-            "Uji pasang (test-fit) pada botol Cuculemon 1L sebelum masuk Zona 4: bahu rajut harus menempel rata pada lengkung bahu 20.0–25.5 cm tanpa celah longgar.",
+            "Jadwal Pengurangan Kubah Cembung 1 Helai (9 baris, 60 → 44 sc): R1–2 sc 60; R3 (13 sc, dec)×4 (56); R4 sc 56; R5 (12 sc, dec)×4 (52); R6 (11 sc, dec)×4 (48); R7 sc 48; R8 (10 sc, dec)×4 (44); R9 sc 44.",
+            "Jadwal Pengurangan Kubah Cembung 2 Helai (6 baris, 40 → 28 sc): R1 sc 40; R2 (8 sc, dec)×4 (36); R3 (7 sc, dec)×4 (32); R4 sc 32; R5 (6 sc, dec)×4 (28); R6 sc 28.",
+            "Selesaikan bingkai kerah V Hijau Tua (#438D5A) membungkus bahu kiri/kanan menuju ujung lancip V di tengah depan pada tinggi ~20.5 cm.",
+            "Uji pasang (test-fit) pada botol Cuculemon 1L sebelum masuk Zona 4: kubah rajut 3.3 cm harus memeluk bahu baja secara rata tanpa celah udara.",
         ],
     },
     ("sceptile", "zone-4"): {
-        "title": "Zona 4: Kerah Leher, Kanal Serut Paracord 550 & Hub Ring D 1.5 cm",
-        "badge": "Tinggi 25.5–28.0 cm  |  Ø 5.6–5.8 cm",
-        "stitches": "1 Helai: 44 sc keliling  |  2 Helai: 28 sc keliling",
-        "rows": "1 Helai: 7 baris  |  2 Helai: 5 baris",
-        "colors": "Hijau Mint (#68C481), Hijau Tua Forest (#438D5A)",
+        "title": "Zona 4: Kerah Leher Vertikal, Serut Sulam 14 Eyelet & Ring Silikon",
+        "badge": "Tinggi 24.8–27.8 cm  |  Ø 5.6–5.8 cm",
+        "stitches": "1 Helai: 44 sc  |  2 Helai: 28 sc (takik 3 st kiri/kanan)",
+        "rows": "1 Helai: 8 baris  |  2 Helai: 6 baris",
+        "colors": "Hijau Mint (#68C481), Merah Coral (#D6615D — manik ujung tali)",
         "load_note": (
-            "Hub suspensi utama: Pita Webbing Nylon 1.5 cm × 20 cm dijahit jadi cincin dalam lingkar 18.0 cm (Ø 5.73 cm) di balik kerah rajut "
-            "untuk mencegah rajutan melar. Dua Ring D Besi 1.5 cm (kawat 3.0 mm) terpasang di sisi kiri/kanan pada tab webbing 6 cm. "
-            "Tutup & pegangan botol 28.0–32.0 cm dibiarkan 100% terbuka."
+            "HUB SUSPENSI UTAMA 1.3 KG (Ring Silikon & Serut Sulam): Ring Silikon Tumbler Wide-Mouth (ID 5.5–5.8 cm) duduk tepat di manset rajut atas "
+            "(y = 26.6–27.8 cm) di bawah bibir tutup ulir Ø ~6.0 cm dan disatukan dengan kerah rajut lewat 4 simpul jahit lilit Polycherry. "
+            "Tepat di bawahnya (y = 25.4–26.2 cm), tali serut Paracord 550 disulam keluar-masuk 14 eyelet + stopper pegas 2 lubang. Tutup, flip-straw & side carry loop 27.8–32.0 cm dibiarkan 100% bebas."
         ),
         "steps": [
-            "Baris 1–2: Kerjakan 44 sc (atau 28 sc pada 2 helai) merata pada diameter Ø 5.8 cm.",
-            "Baris 3 (Putaran Lubang Serut / Eyelet): Pada 1 helai: [sc 2, ch 1, sk 1] ×14, sc 2 (membentuk 14 lubang eyelet keliling; posisikan 2 lubang di tengah belakang/depan untuk keluar ujung stopper). Pada 2 helai: [sc 1, ch 1, sk 1] ×14.",
-            "Baris 4–7 (atau Baris 4–5 pada 2 helai): Kerjakan 44 sc (28 sc) rapat pada manset atas, akhiri Baris terakhir dengan tusuk mundur (crab stitch) atau slip stitch rapi tepat di tinggi 28.0 cm.",
-            "Instalasi Hardware & Fit Leher: (1) Jahit pita Webbing Nylon 1.5 cm × 20 cm di sisi dalam Baris 4–6; (2) Masukkan 2 Ring D 1.5 cm ke tab webbing 15 cm lalu jahit X-box 6 cm ke bawah di sisi kiri & kanan; (3) Sulam 65 cm Paracord 550 4 mm lewat lubang Baris 3 dan pasang stopper pegas 2 lubang; (4) Pasang opsional Ring Silikon Wide-Mouth Ø 5.5–6.0 cm di alur leher 26–27.5 cm di bawah tutup ~6.5 cm.",
+            "Baris 1–2 (24.8–25.5 cm): Kerjakan 44 sc (atau 28 sc pada 2 helai) lurus ke atas memeluk bagian leher hitam Ø 5.8 cm.",
+            "Baris 3 (25.4–26.2 cm — Putaran Tali Serut 14 Eyelet): Pada 1 helai: [sc 2, ch 1, sk 1] ×14, sc 2 (14 lubang merata). Pada 2 helai: [sc 1, ch 1, sk 1] ×14. Sulamkan 65 cm Paracord 550 4 mm KELUAR-MASUK melewati seluruh 14 lubang eyelet, keluarkan kedua ujung di sisi belakang/samping melalui 2 lubang bersebelahan ke Stopper Pegas 2 Lubang + rajut 2 manik ujung Merah Coral (MR 6 → 6 sc → tutup) membungkus simpul ujung tali.",
+            "Baris 4–5 (26.2–26.9 cm): Kerjakan 44 sc (28 sc) rapat naik memeluk bagian leher silver atas.",
+            "Baris 6–8 (26.6–27.8 cm — Dudukan Ring Silikon & Takik Kuping): Kerjakan 44 sc (28 sc) hingga tinggi tepat 27.8 cm, dengan menyisakan 2 takik/potongan dangkal selebar 3 stitch di posisi jam 3 & jam 9 (skip 3 st / slip stitch rendah pada R7–8) agar kedua lubang kuping samping bawaan Ring Silikon duduk rata tanpa mengganjal.",
+            "Satukan Ring Silikon & Kait Tali: Selipkan Ring Silikon Tumbler Wide-Mouth (ID 5.5–5.8 cm) ke manset rajut atas y = 26.6–27.8 cm di bawah flensa tutup Ø ~6.0 cm. Kunci keduanya menjadi satu kesatuan memakai 4 simpul jahit lilit Polycherry (whip-stitch/tacking loops di depan, belakang, kiri, kanan — melingkari bibir bawah ring silikon & tusuk kerah atas). Kaitkan Kait Udang 1.5 cm dari Tali 30 cm / 100 cm LANGSUNG ke 2 kuping samping Ring Silikon.",
         ],
     },
     ("sceptile", "zone-5"): {
         "title": "Zona 5: Relief Kepala Sceptile di Kerah Depan, Jambul & Mata Celah",
-        "badge": "Tinggi 21.5–28.0 cm  |  Relief Depan ~7.5×6.5 cm",
+        "badge": "Tinggi 21.5–27.8 cm  |  Relief Depan ~7.5×6.3 cm",
         "stitches": "Kubah moncong: MR 6 → 30 sc (half-shell) + 2 jambul runcing (MR 4 → 14 sc)",
         "rows": "Moncong/wajah 12 baris + 2 jambul × 8 baris + rahang bawah 4 baris",
         "colors": "Hijau Mint (#68C481), Merah Coral (#D6615D), Kuning (#E4D17C), Hitam (#1F2421)",
         "load_note": (
-            "Dipasang khusus pada dinding depan Zona 3–4 di bawah bibir 28.0 cm (menghindari Ring D kiri/kanan dan jalur tali serut), "
-            "sehingga tutup tumbler 28.0–32.0 cm tetap bebas diputar buka-tutup."
+            "Dipasang khusus pada lengkung depan dada/kerah di bawah bibir 27.8 cm (bebas dari kuping samping Ring Silikon di jam 3 & jam 9 "
+            "maupun stopper tali serut di belakang), sehingga tutup botol, flip-straw spout, & side carry loop 27.8–32.0 cm tetap bebas 100%."
         ),
         "steps": [
             "Moncong & Alis Relief: Rajut kubah moncong oval pipih dengan Hijau Mint (#68C481) (MR 6 → 30 sc, 12 baris), isi Dakron padat secukupnya, tambahkan lengkung rahang bawah sabit Merah Coral (#D6615D) di bawah moncong.",
-            "Jambul Kepala Runcing Kembar (2 pcs): MR 4 sc, naikkan bertahap ke 14 sc selama 8 baris dalam Hijau Mint; pipihkan ringan lalu jahit miring ke atas-luar di kanan/kiri kerah depan (berhenti sejajar tinggi leher 28 cm agar tidak menghalangi tutup botol).",
+            "Jambul Kepala Runcing Kembar (2 pcs): MR 4 sc, naikkan bertahap ke 14 sc selama 8 baris dalam Hijau Mint; pipihkan ringan lalu jahit miring ke atas-luar di kanan/kiri kerah depan di bawah batas 27.8 cm agar tidak menghalangi putaran tutup botol.",
             "Sepasang Mata Tajam (2 pcs): Buat bentuk almond Kuning Muda (#E4D17C) (ch 5, sc/hdc/sc berkeliling), sulam pupil celah vertikal Hitam (#1F2421) + titik kilau, beri bingkai kelopak bawah Merah Coral (#D6615D) dan alis Hijau Tua, lalu jahit simetris di sisi atas moncong.",
         ],
     },
     ("sceptile", "zone-6"): {
-        "title": "Zona 6: 6 Biji Punggung 3D, Ekor Daun, Bilah Lengan, Kaki & Tali 30/100 cm",
+        "title": "Zona 6: 6 Biji Punggung, Ekor Daun, Lengan, Kaki & Tali 30/100 cm",
         "badge": "Zona 1–3 + Tali 30 cm & 100 cm",
         "stitches": "Biji: MR 6 → 18 sc; Pangkal ekor: MR 6 → 24 sc; Strap Thermal 100 cm: lebar 8 st",
         "rows": "6 Biji × 7 baris; Ekor 26 baris + 12 bilah daun; Tali 30 cm; Tali 100 cm ~470 baris",
         "colors": "Hijau Mint (#68C481), Hijau Tua (#438D5A), Kuning (#E4D17C), Coral (#D6615D)",
         "load_note": (
-            "Seluruh komponen amigurumi 3D dijahit HANYA pada rajutan luar (jangan menembus pita webbing dalam) dan wajib diisi Dakron padat. "
-            "Tali Pendek 30 cm & Tali Panjang 100 cm bertumpu 100% pada tulang inti Paracord 550 4 mm yang mengait ke Kait Udang 1.5 cm."
+            "Seluruh komponen amigurumi 3D dijahit ke dinding rajutan luar dan wajib diisi Dakron padat agar ekor & anggota badan kokoh berdiri. "
+            "Kedua tali lepas-pasang bertumpu pada tulang inti Paracord 550 4 mm yang Kait Udang 1.5 cm-nya mengait LANGSUNG ke 2 kuping samping Ring Silikon."
         ),
         "steps": [
-            "6 Biji Punggung Kuning (6 pcs): MR 6 → 12 → 18 → 18 → 18 → 12 → 6 sc dengan Kuning Muda (#E4D17C), isi Dakron padat; jahit membentuk 2 kolom vertikal isi 3 biji di punggung tengah-atas (tinggi 13–23 cm).",
-            "Ekor Daun Berlapis: Rajut kerucut pangkal ekor Hijau Mint (#68C481) (MR 6 → 24 sc selama 26 baris, melengkung ke atas ±30°, isi Dakron sangat padat); buat sirip daun bergerigi (pasangan atas Hijau Tua #438D5A, pasangan bawah Hijau Mint #68C481 dengan picot ch+sc/hdc/dc) lalu jahit lebar pangkal ekor di tinggi 3.0–9.0 cm belakang.",
-            "Lengan & Bilah Daun Pergelangan (2 set): Tabung lengan MR 6 → 12 sc × 14 baris berujung 3 cakar kecil; pada tiap pergelangan jahit 2 helai daun pipih mengarah ke atas (1 bilah tinggi 6 cm Hijau Mint + 1 bilah 4.5 cm Hijau Tua); pasang di sisi tinggi 18.5–20.5 cm.",
+            "6 Biji Punggung Kuning (6 pcs): MR 6 → 12 → 18 → 18 → 18 → 12 → 6 sc dengan Kuning Muda (#E4D17C), isi Dakron padat; jahit membentuk 2 kolom vertikal isi 3 biji di punggung tengah-atas (tinggi 14.0–23.5 cm).",
+            "Ekor Daun Berlapis: Rajut kerucut pangkal ekor Hijau Mint (#68C481) (MR 6 → 24 sc selama 26 baris, melengkung ke atas ±30°, isi Dakron sangat padat); buat sirip daun bergerigi (pasangan atas Hijau Tua #438D5A, pasangan bawah Hijau Mint #68C481 dengan picot ch+sc/hdc/dc) lalu jahit lebar pangkal ekor di tinggi 3.0–9.5 cm belakang.",
+            "Lengan & Bilah Daun Pergelangan (2 set): Tabung lengan MR 6 → 12 sc × 14 baris berujung 3 cakar kecil; pada tiap pergelangan jahit 2 helai daun pipih mengarah ke atas (1 bilah tinggi 6 cm Hijau Mint + 1 bilah 4.5 cm Hijau Tua); pasang di sisi tinggi 19.0–21.5 cm.",
             "Kaki Belakang Berotot & 3 Jari (2 pcs): MR 6 → 24 sc paha tirus × 10 baris + bantalan kaki 3 jari, jahit simetris di sudut depan bawah Zona 1–2 (0–6 cm) agar sarung tumbler stabil berdiri rata di meja.",
-            "Sepasang Tali Gantungan Lepas-Pasang: (A) Tali Pendek 30 cm = inti Paracord 550 4 mm dipilin/kepang mengait ke 2 Kait Udang 1.5 cm dengan selongsong rajut Polycherry ketat 3.5–4.0 cm warna Emerald/Coral/Kuning; (B) Tali Panjang 100 cm = strap datar Thermal Stitch selebar 8 st (~1.9 cm, ~470 baris) motif Emerald + garis tepi Coral membungkus inti Paracord 550 4 mm utuh hingga kedua Kait Udang 1.5 cm.",
+            "Tali Gantungan Lepas-Pasang (Kait Langsung ke Kuping Ring Silikon): (A) Tali Pendek 30 cm = inti Paracord 550 4 mm dipilin/kepang mengait ke 2 Kait Udang 1.5 cm dengan selongsong rajut Polycherry ketat 4 cm warna Emerald/Coral/Kuning; (B) Tali Panjang 100 cm = strap datar Thermal Stitch lebar 8 st (~1.9 cm, ~470 baris) motif Emerald + tepi Coral membungkus inti Paracord 550 4 mm utuh hingga kedua Kait Udang 1.5 cm. Kaitkan langsung ke 2 lubang kuping Ring Silikon.",
         ],
     },
     ("dragonite", "zone-1"): {
@@ -772,87 +773,88 @@ ZONE_ID_CONTENT: dict[tuple[str, str], dict[str, Any]] = {
         ],
     },
     ("dragonite", "zone-2"): {
-        "title": "Zona 2: Silinder Bodi Lurus & Panel Perut Krem Bergaris (Ribbed Belly)",
-        "badge": "Tinggi 0.0–20.0 cm  |  Ø 8.0 cm (Keliling 25.13 cm)",
+        "title": "Zona 2: Silinder Bodi Lurus & Panel Perut Krem 12 Rusuk",
+        "badge": "Tinggi 0.0–21.5 cm  |  Ø 8.0 cm (Kll. 25.13 cm)",
         "stitches": "1 Helai: 60 sc keliling  |  2 Helai: 40 sc keliling",
-        "rows": "1 Helai: 52 baris  |  2 Helai: 36 baris",
+        "rows": "1 Helai: 56 baris  |  2 Helai: 39 baris",
         "colors": "Oranye Emas (#EC9D41), Krem / Ivory (#EAD8B3)",
         "load_note": (
-            "Silinder YU-SC rapat mempertahankan keliling tepat 25.13 cm. Panel perut Krem bergaris membentuk lapisan depan ganda "
-            "yang memberi tekstur ikonik tanpa mengubah diameter ruang dalam Ø 8.0 cm."
+            "Silinder YU-SC rapat mempertahankan keliling tepat 25.13 cm di sepanjang dinding 0.0–21.5 cm. "
+            "Panel perut Krem 12 rusuk menambah kekakuan lapis ganda bagian depan tanpa mengubah diameter ruang dalam Ø 8.0 cm."
         ),
         "steps": [
-            "Kerjakan silinder lurus warna Oranye Emas (#EC9D41) sebanyak 52 baris (1 helai) atau 36 baris (2 helai) hingga tinggi 20.0 cm.",
-            "Panel Perut Krem Bergaris (tinggi depan 1.0–20.0 cm): Rajut terpisah sebagai panel oval tirus warna Krem (#EAD8B3) menggunakan tusuk BLO bergantian tiap 2 baris untuk membentuk ±11 rusuk horizontal tajam (terlebar ~18 st / 7.5 cm di perut tengah, menirus halus ke 12 st / 5.0 cm di dada atas).",
-            "Alternatif terintegrasi: kerjakan tapestry/intarsia Krem pada 18 st depan (12 st pada 2 helai) lalu tambahkan rusuk horizontal via surface slip stitch tiap 4 baris; pastikan jahitan panel tetap rata sehingga botol masuk mulus.",
+            "Kerjakan silinder lurus warna Oranye Emas (#EC9D41) sebanyak 56 baris (1 helai) atau 39 baris (2 helai) hingga tinggi 21.5 cm.",
+            "Panel Perut Krem Bergaris (tinggi depan 1.0–21.5 cm): Rajut terpisah sebagai panel oval tirus warna Krem (#EAD8B3) menggunakan tusuk BLO bergantian tiap 2 baris untuk membentuk 12 rusuk horizontal tajam (terlebar ~18 st / 7.5 cm di perut tengah, menirus halus ke 12 st / 5.0 cm di dada atas).",
+            "Alternatif terintegrasi: kerjakan tapestry/intarsia Krem pada 18 st depan (12 st pada 2 helai) lalu tambahkan rusuk horizontal via surface slip stitch tiap 4 baris; jahit rata ke dinding depan sehingga tumbler tetap keluar-masuk dengan mulus.",
         ],
     },
     ("dragonite", "zone-3"): {
-        "title": "Zona 3: Bahu Tirus, Lanjutan Rusuk Leher, Sayap & Jembatan Webbing",
-        "badge": "Tinggi 20.0–25.5 cm  |  Ø 8.0 → 5.8 cm",
+        "title": "Zona 3: Bahu Kubah Cembung, Lanjutan Rusuk Tenggorokan & Sayap",
+        "badge": "Tinggi 21.5–24.8 cm  |  Ø 8.0 → 5.7 cm",
         "stitches": "1 Helai: 60 sc → 44 sc  |  2 Helai: 40 sc → 28 sc",
-        "rows": "1 Helai: 14 baris  |  2 Helai: 10 baris",
+        "rows": "1 Helai: 9 baris  |  2 Helai: 6 baris",
         "colors": "Oranye Emas (#EC9D41), Krem / Ivory (#EAD8B3)",
         "load_note": (
-            "KRITIS: Dua tab vertikal Webbing Nylon 1.5 cm dari Ring D Zona 4 menjulur turun 6.0 cm melintasi Zona 3 ke atas Zona 2 "
-            "(25.5 → 19.5 cm) dan dikunci jahitan X-box benang nylon. Sayap dipasang sedikit ke bahu belakang (posisi jam 10 & jam 2) "
-            "agar tidak berbenturan dengan Ring D di sisi jam 9 & jam 3."
+            "Memeluk mulus lengkung kubah baja 3.3 cm (21.5–24.8 cm). Karena Ring Silikon pada Zona 4 menumpu 1.3 kg langsung di bawah bibir tutup Ø ~6.0 cm, "
+            "rajutan bahu Zona 3 tidak mengalami regangan tarik ke atas. Sepasang sayap punggung dipasang pada jam 10 & jam 2 di belakang kuping Ring Silikon."
         ),
         "steps": [
-            "Jadwal Pengurangan 1 Helai (14 baris, 60 → 44 sc): R1–2 sc 60; R3 (13 sc, dec)×4 (56); R4–5 sc 56; R6 (12 sc, dec)×4 (52); R7–8 sc 52; R9 (11 sc, dec)×4 (48); R10–11 sc 48; R12 (10 sc, dec)×4 (44); R13–14 sc 44.",
-            "Jadwal Pengurangan 2 Helai (10 baris, 40 → 28 sc): R1 sc 40; R2 (8 sc, dec)×4 (36); R3–4 sc 36; R5 (7 sc, dec)×4 (32); R6–7 sc 32; R8 (6 sc, dec)×4 (28); R9–10 sc 28.",
-            "Teruskan penyempitan panel Krem bergaris pada tenggorokan depan hingga tinggi ~22.5–25.5 cm (lebar ~10 st / 4.0 cm) tepat di bawah dagu/moncong Dragonite.",
+            "Jadwal Pengurangan Kubah Cembung 1 Helai (9 baris, 60 → 44 sc): R1–2 sc 60; R3 (13 sc, dec)×4 (56); R4 sc 56; R5 (12 sc, dec)×4 (52); R6 (11 sc, dec)×4 (48); R7 sc 48; R8 (10 sc, dec)×4 (44); R9 sc 44.",
+            "Jadwal Pengurangan Kubah Cembung 2 Helai (6 baris, 40 → 28 sc): R1 sc 40; R2 (8 sc, dec)×4 (36); R3 (7 sc, dec)×4 (32); R4 sc 32; R5 (6 sc, dec)×4 (28); R6 sc 28.",
+            "Teruskan penyempitan panel Krem bergaris pada tenggorokan depan hingga tinggi 24.8 cm (lebar ~10 st / 4.0 cm) tepat di bawah dagu/moncong Dragonite.",
         ],
     },
     ("dragonite", "zone-4"): {
-        "title": "Zona 4: Kerah Leher, Kanal Serut Paracord 550 & Hub Ring D 1.5 cm",
-        "badge": "Tinggi 25.5–28.0 cm  |  Ø 5.6–5.8 cm",
-        "stitches": "1 Helai: 44 sc keliling  |  2 Helai: 28 sc keliling",
-        "rows": "1 Helai: 7 baris  |  2 Helai: 5 baris",
-        "colors": "Oranye Emas (#EC9D41)",
+        "title": "Zona 4: Kerah Leher Vertikal, Serut Sulam 14 Eyelet & Ring Silikon",
+        "badge": "Tinggi 24.8–27.8 cm  |  Ø 5.6–5.8 cm",
+        "stitches": "1 Helai: 44 sc  |  2 Helai: 28 sc (takik 3 st kiri/kanan)",
+        "rows": "1 Helai: 8 baris  |  2 Helai: 6 baris",
+        "colors": "Oranye Emas (#EC9D41), Krem / Ivory (#EAD8B3 — manik ujung tali)",
         "load_note": (
-            "Pita Webbing Nylon 1.5 cm × 20 cm dijahit di balik Baris 4–6 membentuk cincin anti-melar 18.0 cm (Ø 5.73 cm) yang menyalurkan "
-            "beban 1.3 kg ke dua Ring D 1.5 cm (kawat 3.0 mm). Tutup & pegangan botol 28.0–32.0 cm dibiarkan 100% terbuka."
+            "HUB SUSPENSI UTAMA 1.3 KG (Ring Silikon & Serut Sulam): Ring Silikon Tumbler Wide-Mouth (ID 5.5–5.8 cm) menyatu dengan manset rajut atas "
+            "(y = 26.6–27.8 cm) di bawah flensa tutup Ø ~6.0 cm melalui 4 simpul jahit lilit Polycherry. Tepat di bawahnya (y = 25.4–26.2 cm), "
+            "Paracord 550 4 mm disulam keluar-masuk 14 lubang eyelet & dikunci stopper 2 lubang. Tutup, flip-straw & side carry loop 27.8–32.0 cm bebas 100%."
         ),
         "steps": [
-            "Baris 1–2: 44 sc (atau 28 sc pada 2 helai) melingkar pada leher Ø 5.8 cm dalam Oranye Emas (#EC9D41).",
-            "Baris 3 (Putaran Lubang Serut / Eyelet): Pada 1 helai: [sc 2, ch 1, sk 1] ×14, sc 2. Pada 2 helai: [sc 1, ch 1, sk 1] ×14.",
-            "Baris 4–7 (atau Baris 4–5 pada 2 helai): 44 sc (28 sc) rapat untuk manset kerah atas, akhiri dengan slip stitch rapi tepat pada tinggi 28.0 cm.",
-            "Pasang pita Webbing Nylon 1.5 cm × 20 cm di dalam kerah, lipat 2 tab webbing 15 cm melewati Ring D 1.5 cm lalu jahit X-box 6 cm ke bawah di sisi kiri & kanan, sulam 65 cm Paracord 550 4 mm + stopper 2 lubang, dan pasang opsional Ring Silikon Ø 5.5–6.0 cm di bawah bibir tutup ~6.5 cm.",
+            "Baris 1–2 (24.8–25.5 cm): Kerjakan 44 sc (atau 28 sc pada 2 helai) melingkar pada leher hitam bawah Ø 5.8 cm dalam Oranye Emas (#EC9D41).",
+            "Baris 3 (25.4–26.2 cm — Putaran Tali Serut 14 Eyelet): Pada 1 helai: [sc 2, ch 1, sk 1] ×14, sc 2. Pada 2 helai: [sc 1, ch 1, sk 1] ×14. Sulam 65 cm Paracord 550 4 mm KELUAR-MASUK melewati ke-14 lubang eyelet, keluarkan kedua ujung di 2 lubang belakang/samping ke Stopper Pegas 2 Lubang + rajut 2 manik ujung warna Krem (#EAD8B3) membungkus simpul ujung.",
+            "Baris 4–5 (26.2–26.9 cm): Kerjakan 44 sc (28 sc) rapat memeluk leher silver bagian atas.",
+            "Baris 6–8 (26.6–27.8 cm — Dudukan Ring Silikon & Takik Kuping): Kerjakan 44 sc (28 sc) hingga tepat 27.8 cm sambil membuat 2 takik dangkal selebar 3 stitch di sisi kiri (jam 9) & kanan (jam 3) agar kuping samping Ring Silikon pas masuk dengan rata.",
+            "Satukan Ring Silikon & Kait Tali: Pasang Ring Silikon Wide-Mouth (ID 5.5–5.8 cm) pada manset atas y = 26.6–27.8 cm tepat di bawah bibir tutup Ø ~6.0 cm, lalu kunci menjadi satu kesatuan memakai 4 simpul jahit lilit Polycherry (depan, belakang, kiri, kanan melewati bibir bawah ring silikon & tusuk kerah atas). Kaitkan langsung Kait Udang 1.5 cm ke kedua kuping samping Ring Silikon.",
         ],
     },
     ("dragonite", "zone-5"): {
-        "title": "Zona 5: Moncong Bulat Dragonite, Mata Oval, Tanduk & 2 Antena Lengkung-S",
-        "badge": "Tinggi 22.0–28.0 cm  |  Relief Depan ~7.5×6.0 cm",
+        "title": "Zona 5: Moncong Dragonite, Mata Oval, Tanduk & 2 Antena-S",
+        "badge": "Tinggi 21.8–27.8 cm  |  Relief Depan ~7.5×6.0 cm",
         "stitches": "Kubah moncong: MR 6 → 30 sc; Tanduk: MR 4 → 10 sc; Antena: tabung spiral 4–5 sc",
         "rows": "Moncong 10 baris; Tanduk 5 baris; 2 Antena × 16 baris",
         "colors": "Oranye Emas (#EC9D41), Krem (#EAD8B3), Tosca (#167B75), Putih Tulang (#DCE0E5), Hitam (#1F2421)",
         "load_note": (
-            "Dipasang pada dinding depan dada/kerah (22.0–28.0 cm). Tanduk kecil & 2 antena Krem diarahkan miring lembut ke depan-atas "
-            "dari bibir 27.5 cm agar tutup botol 28.0–32.0 cm mudah diputar tanpa tersangkut."
+            "Dipasang pada dinding depan dada/kerah (21.8–27.8 cm), bebas dari kuping samping Ring Silikon. "
+            "Tanduk kecil & 2 antena Krem diarahkan miring lembut ke depan-atas dari bibir 27.5 cm agar tutup ulir & flip-straw 27.8–32.0 cm bebas diputar."
         ),
         "steps": [
-            "Moncong Bulat & Pipi: Rajut moncong tebal Oranye Emas (#EC9D41) (MR 6 → 30 sc, 10 baris, isi Dakron padat), sulam 2 lubang hidung kecil dan senyum lembut warna Hitam (#1F2421), jahit terpusat di tinggi 22.5–26.5 cm.",
-            "Sepasang Mata Oval (2 pcs): Buat dasar putih oval (#DCE0E5) + iris Hijau Tosca Tua (#167B75) + pupil vertikal Hitam (#1F2421) + kilau putih halus, jahit simetris di kanan-kiri atas moncong.",
-            "Tanduk Dahi Tengah: Kerucut mini Oranye Emas (MR 4 → 6 → 8 → 10 sc dalam 5 baris) dijahit tepat di tengah bibir depan tinggi 27.5 cm.",
+            "Moncong Bulat & Pipi: Rajut moncong tebal Oranye Emas (#EC9D41) (MR 6 → 30 sc, 10 baris, isi Dakron padat), sulam 2 lubang hidung kecil dan senyum lembut Hitam (#1F2421), jahit terpusat di tinggi 22.0–26.2 cm.",
+            "Sepasang Mata Oval (2 pcs): Buat iris oval Hijau Tosca Tua (#167B75) + pupil vertikal Hitam (#1F2421) + kilau sabit Putih Tulang (#DCE0E5), jahit simetris di kanan-kiri atas moncong.",
+            "Tanduk Dahi Tengah: Kerucut mini Oranye Emas (MR 4 → 6 → 8 → 10 sc dalam 5 baris) dijahit tepat di tengah bibir depan tinggi 27.3 cm.",
             "Dua Antena Lengkung-S (2 pcs): Kerjakan tabung spiral rapat 4–5 sc warna Krem (#EAD8B3) sepanjang 16 baris (~6.5 cm); selipkan sisa benang Polycherry pilin di dalamnya agar kaku lalu bentuk kurva huruf S mengapit tanduk dahi.",
         ],
     },
     ("dragonite", "zone-6"): {
-        "title": "Zona 6: Sayap 2-Warna, Ekor Gemuk Bergaris, Kaki/Lengan Bercakar & Tali",
+        "title": "Zona 6: Sayap 2-Warna, Ekor Bergaris, Kaki/Lengan & Tali 30/100 cm",
         "badge": "Zona 1–3 + Tali 30 cm & 100 cm",
         "stitches": "Ekor: MR 6 → 34 sc; Sayap 2-warna bergerigi 3 titik; Strap Thermal 100 cm: lebar 8 st",
         "rows": "Ekor 32 baris; Sayap 14 baris/sisi; 12 Cakar × 4 baris; Tali 30 cm; Tali 100 cm ~470 baris",
         "colors": "Oranye Emas (#EC9D41), Krem (#EAD8B3), Hijau Tosca (#167B75), Putih Tulang (#DCE0E5)",
         "load_note": (
-            "Ekor gemuk & sayap 2-warna dijahit hanya ke dinding luar rajutan (tidak menembus pita webbing) dan diseimbangkan kanan-kiri "
-            "agar tumbler 1.3 kg tergantung tegak lurus tanpa miring ke belakang."
+            "Ekor gemuk & sayap 2-warna dijahit ke dinding luar rajutan secara simetris agar tumbler 1.3 kg tergantung tegak lurus tanpa miring. "
+            "Tali Pendek 30 cm & Tali Panjang 100 cm memakai tulang inti Paracord 550 4 mm yang Kait Udang 1.5 cm-nya mengait LANGSUNG ke kuping samping Ring Silikon."
         ),
         "steps": [
-            "Sepasang Sayap Dragonite 2-Warna (2 pcs, Kiri & Kanan): Rajut membran dalam bentuk sayap kelelawar bergerigi 3 ujung bawah dengan Hijau Tosca Tua (#167B75, 14 baris); buat panel belakang + tulang rangka atas Oranye Emas (#EC9D41); satukan kedua lapisan dengan tusuk sc keliling berwarna Oranye Emas (opsional sisipkan strip tipis EVA 2 mm di tepi tulang atas agar sayap mekar tegas). Jahit di punggung bahu atas tinggi 18.0–24.5 cm sedikit miring ke belakang.",
-            "Ekor Gemuk dengan Bagian Bawah Bergaris Krem: Rajut kerucut ekor besar Oranye Emas (MR 6 → 34 sc selama 32 baris, isi Dakron sangat padat melengkung ke atas sepanjang 17 cm agar tidak menyentuh lantai); jahitkan panel Krem (#EAD8B3) bergaris 8 rusuk BLO sepanjang lekukan bawah ekor; pasang pangkal ekor lebar di punggung bawah 2.0–9.5 cm.",
-            "Lengan & Kaki Bercakar 12 Cakar (2 lengan + 2 kaki): Lengan pendek gemuk Oranye Emas (MR 6 → 16 sc × 13 baris) dan kaki bulat kokoh (MR 6 → 22 sc × 12 baris); buat 12 kerucut cakar kecil Putih Tulang (#DCE0E5, MR 4 → 6 sc, 4 baris) — 3 per tangan, 3 per kaki — jahit rapi ke ujung jari. Pasang kaki di sudut depan bawah Zona 1–2 (0–6 cm) dan lengan di 17.5–20.5 cm.",
-            "Sepasang Tali Gantungan Lepas-Pasang: (A) Tali Pendek 30 cm = inti Paracord 550 4 mm dipilin/kepang ke 2 Kait Udang 1.5 cm dengan selongsong rajut Oranye/Krem/Tosca 4 cm; (B) Tali Panjang 100 cm = strap datar Thermal Stitch 8 st (~1.9 cm, ~470 baris) warna Oranye Emas + strip tengah Krem + tepi Tosca membungkus inti Paracord 550 4 mm utuh hingga kedua Kait Udang 1.5 cm.",
+            "Sepasang Sayap Dragonite 2-Warna (2 pcs, Kiri & Kanan): Rajut membran dalam sayap kelelawar bergerigi 3 ujung bawah dengan Hijau Tosca Tua (#167B75, 14 baris); buat lapisan belakang + tulang rangka atas Oranye Emas (#EC9D41); satukan kedua lapisan dengan tusuk sc keliling Oranye Emas (opsional sisipkan strip tipis EVA 2 mm di tulang atas agar sayap mekar tegas). Jahit di punggung bahu atas tinggi 19.0–24.5 cm (jam 10 & jam 2) di belakang kuping Ring Silikon.",
+            "Ekor Gemuk dengan Bagian Bawah Bergaris Krem: Rajut kerucut ekor besar Oranye Emas (MR 6 → 34 sc selama 32 baris, isi Dakron sangat padat melengkung ke atas 17 cm agar tidak menyentuh lantai); jahitkan panel Krem (#EAD8B3) bergaris 8 rusuk BLO sepanjang lekukan bawah ekor; pasang pangkal ekor lebar di punggung bawah 2.0–9.5 cm.",
+            "Lengan & Kaki Bercakar 12 Cakar (2 lengan + 2 kaki): Lengan pendek gemuk Oranye Emas (MR 6 → 16 sc × 13 baris) dan kaki bulat kokoh (MR 6 → 22 sc × 12 baris); buat 12 kerucut cakar kecil Putih Tulang (#DCE0E5, MR 4 → 6 sc, 4 baris) — 3 per tangan, 3 per kaki — jahit rapi ke ujung jari. Pasang kaki di sudut depan bawah Zona 1–2 (0–6 cm) dan lengan di 18.5–21.5 cm.",
+            "Tali Gantungan Lepas-Pasang (Kait Langsung ke Kuping Ring Silikon): (A) Tali Pendek 30 cm = inti Paracord 550 4 mm dipilin/kepang mengait ke 2 Kait Udang 1.5 cm dengan selongsong rajut Oranye/Krem/Tosca 4 cm; (B) Tali Panjang 100 cm = strap datar Thermal Stitch lebar 8 st (~1.9 cm, ~470 baris) warna Oranye Emas + strip tengah Krem + tepi Tosca membungkus inti Paracord 550 4 mm utuh hingga kedua Kait Udang 1.5 cm. Kaitkan langsung ke 2 kuping samping Ring Silikon.",
         ],
     },
 }
@@ -866,17 +868,18 @@ def build_section_1(
     styles: dict[str, ParagraphStyle],
     image_buffers: list[io.BytesIO],
 ) -> list[Any]:
-    """Section 1: Cover Banner, Executive Summary, Cuculemon 1L Specs & 1.3 kg Engineering."""
+    """Section 1: Cover Banner, Executive Summary, Interactive 3D Tip, Cuculemon 1L Specs & 1.3 kg Engineering."""
     ps = specs["projectSpecs"]
     td = ps["tumblerDimensions"]
     le = ps["loadEngineering"]
     hf = ps["hangerFitSystem"]
+    sf_short = le["achievedSafetyFactor"].split()[0].replace("x", "×")
     story: list[Any] = []
 
     # 1. Cover Header Banner
     banner_content = [
         Paragraph(
-            "TECHNICAL BLUEPRINT &amp; PANDUAN PERAJUT  •  SKALA PRODUKSI 1:1",
+            f"TECHNICAL BLUEPRINT &amp; PANDUAN PERAJUT  •  VERSI {escape(ps.get('version', '2.0.0'))} (SKALA 1:1)",
             styles["banner_eyebrow"],
         ),
         Spacer(1, 3),
@@ -898,20 +901,20 @@ def build_section_1(
                 ("LINEBELOW", (0, 0), (0, 0), 3.0, AMBER_ACCENT),
                 ("LEFTPADDING", (0, 0), (0, 0), 14),
                 ("RIGHTPADDING", (0, 0), (0, 0), 14),
-                ("TOPPADDING", (0, 0), (0, 0), 11),
-                ("BOTTOMPADDING", (0, 0), (0, 0), 11),
+                ("TOPPADDING", (0, 0), (0, 0), 10),
+                ("BOTTOMPADDING", (0, 0), (0, 0), 10),
             ]
         )
     )
     story.append(banner)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 7))
 
     # 2. 4-Column Executive KPI Strip
     kpis = [
         ("TUMBLER TARGET", f"Ø {td['bodyDiameterCm']} × {td['totalHeightWithLidCm']} cm", f"Cuculemon {td['capacityLiters']:.0f}L Stainless SUS 304"),
-        ("TINGGI SARUNG RAJUT", f"{td['crochetCaseHeightCm']} cm", f"Tutup/Handle {td['exposedLidHandleRangeCm']} cm terbuka"),
-        ("KAPASITAS BEBAN PENUH", f"{le['designFullWeightKg']} kg ({le['designStaticForceN']} N)", f"Safety Factor 16.9× (min {le['systemWeakestLinkRatingKg']:.0f} kg)"),
-        ("SISTEM TALI GANDA", "30 cm &amp; 100 cm", "Core Paracord 550 4mm (0% mulur)"),
+        ("TINGGI SARUNG RAJUT", f"{td['crochetCaseHeightCm']} cm", f"Tutup &amp; Handle {td['exposedLidHandleRangeCm']} cm bebas"),
+        ("KAPASITAS BEBAN PENUH", f"{le['designFullWeightKg']} kg ({le['designStaticForceN']} N)", f"Safety Factor {escape(sf_short)} (min {le['systemWeakestLinkRatingKg']:.0f} kg)"),
+        ("GANTUNGAN RING SILIKON", "Serut + 30 / 100 cm", "Kait langsung + inti Paracord 550"),
     ]
     kpi_cells = [
         [
@@ -937,22 +940,22 @@ def build_section_1(
                 ("BOX", (col_idx, 0), (col_idx, 0), 0.75, BORDER_SLATE),
                 ("LEFTPADDING", (col_idx, 0), (col_idx, 0), 7),
                 ("RIGHTPADDING", (col_idx, 0), (col_idx, 0), 7),
-                ("TOPPADDING", (col_idx, 0), (col_idx, 0), 6),
-                ("BOTTOMPADDING", (col_idx, 0), (col_idx, 0), 6),
+                ("TOPPADDING", (col_idx, 0), (col_idx, 0), 5.5),
+                ("BOTTOMPADDING", (col_idx, 0), (col_idx, 0), 5.5),
             ]
         )
     kpi_tbl.setStyle(TableStyle(kpi_styles))
     story.append(kpi_tbl)
-    story.append(Spacer(1, 9))
+    story.append(Spacer(1, 8))
 
     # 3. Hero Duo 3D Studio Renders (Side-by-Side)
     left_card = make_studio_card(
         "overview_both_30cm_dims.png",
         card_w=286,
-        img_box_h=296,
+        img_box_h=244,
         caption_html=(
             "<b>Gambar 1.1 — Perbandingan Skala 1:1 (Tali Pendek 30 cm):</b> Sceptile (kiri) &amp; Dragonite (kanan) "
-            f"terpasang presisi pada Cuculemon 1L (bodi Ø {td['bodyDiameterCm']} cm, tinggi sarung {td['crochetCaseHeightCm']} cm, "
+            f"terpasang presisi pada Cuculemon 1L (bodi Ø {td['bodyDiameterCm']} cm, sarung {td['crochetCaseHeightCm']} cm, "
             f"leher Ø {td['neckDiameterMaxCm']} cm, total botol {td['totalHeightWithLidCm']} cm)."
         ),
         styles=styles,
@@ -961,10 +964,10 @@ def build_section_1(
     right_card = make_studio_card(
         "xray_bottle_engineering.png",
         card_w=214,
-        img_box_h=296,
+        img_box_h=244,
         caption_html=(
             "<b>Gambar 1.2 — Tampak X-Ray Engineering:</b> Profil botol baja di dalam dinding YU-SC "
-            "memperlihatkan kesesuaian bahu tirus 20.0–25.5 cm, tutup bebas 28.0–32.0 cm, &amp; jalur beban D-Ring 1.5 cm."
+            "memperlihatkan bahu kubah cembung 21.5–24.8 cm, tali serut 25.4–26.2 cm, Ring Silikon 26.6–27.8 cm, &amp; tutup 27.8–32.0 cm."
         ),
         styles=styles,
         image_buffers=image_buffers,
@@ -982,17 +985,34 @@ def build_section_1(
         )
     )
     story.append(hero_row)
-    story.append(Spacer(1, 9))
+    story.append(Spacer(1, 7))
 
+    # 4. Concept Summary Callout (v2.0.0 Ring Silikon + Woven Drawstring)
     story.append(
         callout_box(
-            "Ringkasan Konsep Produk: Mengapa Desain Ini Berbeda dari Sarung Botol Rajut Biasa?",
-            "Mayoritas sarung botol rajut melar di bahu atau tergelincir ke atas saat menanggung botol stainless steel penuh air (±1.3 kg). "
-            "Desain ini memisahkan <b>lapisan estetika rajut Polycherry D27</b> dari <b>rangka struktur non-melar</b>: cakram EVA 4 mm di alas, "
-            "pita kerah + 2 tab vertikal Webbing Nylon 1.5 cm berjahitan X-box yang memintas pengurangan bahu, tali serut Paracord 550 4 mm di alur leher Ø 5.6–5.8 cm, "
-            "serta dua opsi tali (<b>Tali Pendek 30 cm</b> &amp; <b>Tali Panjang 100 cm</b>) berinti Paracord 550 utuh.",
+            "Ringkasan Arsitektur v2.0: Rangka Ringkas Anti-Melorot (Sistem Ring Silikon Terpadu)",
+            "Sarung rajut biasa sering melar di bahu saat menanggung botol stainless 1.3 kg. Versi 2.0 ini menyederhanakan suspensi menjadi <b>satu unit terpadu yang mudah dirakit perajut</b>: "
+            "(1) Cakram <b>Busa EVA 4 mm</b> di dalam alas ganda Zona 1; (2) <b>Ring Silikon Wide-Mouth Ø 5.5–5.8 cm</b> berkuping samping di leher atas (y = 26.6–27.8 cm) "
+            "di bawah bibir tutup Ø ~6.0 cm yang disatukan ke kerah rajut via <b>4 simpul jahit lilit Polycherry</b>; "
+            "(3) <b>Tali serut Paracord 550 4 mm</b> disulam keluar-masuk <b>14 lubang eyelet</b> tepat di bawahnya (y = 25.4–26.2 cm) + stopper 2 lubang; "
+            "serta (4) <b>Tali Pendek 30 cm</b> &amp; <b>Tali Panjang 100 cm</b> berinti Paracord 550 yang mengait <b>langsung</b> ke 2 kuping Ring Silikon.",
             accent=BLUE_ACCENT,
             bg_color=BLUE_BG,
+            styles=styles,
+        )
+    )
+    story.append(Spacer(1, 6))
+
+    # 5. Interactive 3D Standalone HTML Preview Callout
+    story.append(
+        callout_box(
+            "Cara Paling Gampang Membuka Preview 3D Interaktif",
+            "Ingin melihat lipatan rajutan, posisi kuping Ring Silikon, arah tali serut, atau belakang ekor dari segala sisi sebelum merajut? "
+            "Cukup buka folder <b>output/</b> di sebelah file PDF ini lalu <b>klik-ganda (double-click) file <font name=\"Consolas\">Preview_3D_Perajut_Standalone.html</font></b> "
+            "menggunakan browser <b>Google Chrome, Microsoft Edge, atau Safari</b> di laptop maupun HP Anda — <b>tanpa perlu install software tambahan atau Python</b>. "
+            "Di dalamnya model Sceptile, Dragonite, Botol Asli, &amp; Tali 30/100 cm dapat diputar dan di-zoom <b>360°</b> secara interaktif!",
+            accent=EMERALD_ACCENT,
+            bg_color=EMERALD_BG,
             styles=styles,
         )
     )
@@ -1004,28 +1024,28 @@ def build_section_1(
         section_banner(
             "BAGIAN 1",
             "Spesifikasi Dimensi Tumbler & Rekayasa Beban 1.3 kg",
-            "Parameter fisik Cuculemon 1L Stainless Steel, faktor keamanan 16.9×, dan arsitektur hanger anti-melorot",
+            f"Parameter fisik Cuculemon 1L Stainless Steel, faktor keamanan {sf_short} (min. {le['systemWeakestLinkRatingKg']:.0f} kg), dan sistem Ring Silikon",
             BLUE_ACCENT,
             BLUE_BG,
             styles,
         )
     )
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 7))
 
     story.append(Paragraph("Tabel 1.1 — Dimensi Profil Cuculemon 1L Stainless Steel &amp; Kesesuaian Sarung Rajut", styles["h3"]))
     zone_notes_id = {
-        "Base": "Dasar datar diperkuat internal dengan cakram Busa EVA 4 mm (rentang 3–5 mm) Ø 7.8 cm.",
-        "Straight Body": f"Silinder konstan keliling {td['bodyCircumferenceCm']} cm memeluk dinding stainless steel tanpa celah.",
-        "Tapered Shoulder": "Kemiringan tirus 5.5 cm mengikuti bahu botol persis agar rajutan tidak menggembung.",
-        "Neck Collar": f"Mengunci rapat tepat di bawah bibir tutup ~{td['capFlangeDiameterCm']} cm agar sarung tidak melorot naik.",
-        "Exposed Cap & Carry Handle": "Dibiarkan 100% terbuka demi higienitas minum, buka-tutup ulir, &amp; akses pegangan tutup.",
+        "Base": "Dasar datar diperkuat internal dengan cakram Busa EVA 4 mm (rentang 3–5 mm) Ø 7.8 cm di dalam Zona 1.",
+        "Straight Body": f"Silinder konstan keliling {td['bodyCircumferenceCm']} cm memeluk penuh dinding stainless steel 0.0–21.5 cm tanpa celah.",
+        "Rounded Convex Dome Shoulder": "Kubah cembung halus 3.3 cm melengkung dari bodi Ø 8.0 cm ke leher Ø 5.6–5.7 cm agar rajutan bahu pas rata.",
+        "Vertical Neck": "Leher vertikal 3.0 cm (bagian bawah hitam + atas silver); dudukan serut 25.4–26.2 cm &amp; Ring Silikon 26.6–27.8 cm.",
+        "Exposed Cap, Flip-Straw Spout & Side Carry Loop": f"Tutup ulir hitam Ø ~{td['capFlangeDiameterCm']} cm, cerat lipat atas, &amp; pegangan samping ({td['sideCarryLoopRangeCm']} cm) dibiarkan 100% bebas.",
     }
     zone_names_id = {
         "Base": "Dasar &amp; Bantalan",
         "Straight Body": "Bodi Silinder Lurus",
-        "Tapered Shoulder": "Bahu Tirus (Taper)",
-        "Neck Collar": "Kerah Leher Pengunci",
-        "Exposed Cap & Carry Handle": "Tutup &amp; Handle Terbuka",
+        "Rounded Convex Dome Shoulder": "Bahu Kubah Cembung",
+        "Vertical Neck": "Leher Vertikal Pengunci",
+        "Exposed Cap, Flip-Straw Spout & Side Carry Loop": "Tutup, Flip-Straw &amp; Handle Samping",
     }
 
     dim_rows = [
@@ -1061,25 +1081,25 @@ def build_section_1(
         ]
     )
 
-    dim_tbl = Table(dim_rows, colWidths=[96, 78, 84, 252])
+    dim_tbl = Table(dim_rows, colWidths=[102, 76, 82, 250])
     dim_style: list[tuple[Any, ...]] = [
         ("BACKGROUND", (0, 0), (-1, 0), INK_DARK),
         ("BOX", (0, 0), (-1, -1), 0.75, BORDER_SLATE),
         ("INNERGRID", (0, 0), (-1, -1), 0.4, BORDER_SLATE),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ("LEFTPADDING", (0, 0), (-1, -1), 6),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
-        ("TOPPADDING", (0, 0), (-1, -1), 4.5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4.5),
+        ("LEFTPADDING", (0, 0), (-1, -1), 5.5),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 5.5),
+        ("TOPPADDING", (0, 0), (-1, -1), 4.0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4.0),
     ]
     for r_idx in range(1, len(dim_rows)):
         bg = BLUE_BG if r_idx == len(dim_rows) - 1 else (SURFACE_ALT if r_idx % 2 == 0 else colors.white)
         dim_style.append(("BACKGROUND", (0, r_idx), (-1, r_idx), bg))
     dim_tbl.setStyle(TableStyle(dim_style))
     story.append(KeepTogether([dim_tbl]))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 7))
 
-    # Table 1.2: Load Engineering Analysis (Clean Indonesian Labels)
+    # Table 1.2: Load Engineering Analysis (v2.0.0 — 15.0 kg weakest link, 11.5x safety factor)
     story.append(Paragraph("Tabel 1.2 — Rekayasa Beban Penuh 1.3 kg &amp; Kekuatan Tarik Komponen", styles["h3"]))
     load_rows = [
         [
@@ -1098,75 +1118,83 @@ def build_section_1(
         ],
         [
             Paragraph("Titik Terlemah &amp; Safety Factor Sistem", styles["td_bold"]),
-            Paragraph(f"Tautan Terlemah &gt; {le['systemWeakestLinkRatingKg']:.0f} kg<br/><b>Safety Factor: 16.9×</b>", styles["td_center"]),
+            Paragraph(f"Tautan Terlemah &gt; {le['systemWeakestLinkRatingKg']:.0f} kg<br/><b>Safety Factor: {escape(sf_short)}</b>", styles["td_center"]),
             Paragraph(
-                "Melebihi standar minimum 3× (4.0 kg) dengan margin lebih dari 5× lipat untuk ayunan jalan &amp; hentakan ringan.",
+                "Melebihi standar minimum 3× (4.0 kg) dengan margin hampir 4× lipat untuk ayunan jalan, naik tangga, &amp; hentakan harian.",
+                styles["td"],
+            ),
+        ],
+        [
+            Paragraph("Ring Silikon Wide-Mouth Ø 5.5–5.8 cm", styles["td_bold"]),
+            Paragraph("Kuat tarik &amp; sobek &gt; 15 kg<br/>(2 kuping samping cetak)", styles["td_center"]),
+            Paragraph(
+                "Duduk di leher atas (y = 26.6–27.8 cm) tepat di bawah bibir tutup ulir Ø ~6.0 cm; menumpu beban botol secara langsung.",
+                styles["td"],
+            ),
+        ],
+        [
+            Paragraph("4 Simpul Polycherry + Serut Paracord 14 Eyelet", styles["td_bold"]),
+            Paragraph("Geser vertikal &gt; 15 kg<br/>(4 simpul + tali serut 4 mm)", styles["td_center"]),
+            Paragraph(
+                "4 simpul lilit Polycherry mengunci Ring Silikon ke kerah rajut atas (26.2–27.8 cm); serut sulam di 25.4–26.2 cm mencegah selip.",
                 styles["td"],
             ),
         ],
         [
             Paragraph("Tali Paracord 550 Tipe III (Ø 4 mm)", styles["td_bold"]),
             Paragraph("Kekuatan putus 249 kg (550 lbs)<br/>Beban kerja aman ~50 kg", styles["td_center"]),
-            Paragraph("Inti struktural 3 titik: drawstring leher Ø 5.8 cm, core Tali Pendek 30 cm, &amp; spine Tali Panjang 100 cm.", styles["td"]),
-        ],
-        [
-            Paragraph("Ring D Besi Las (1.5 cm × kawat 3.0 mm)", styles["td_bold"]),
-            Paragraph("Beban statis &gt; 35 kg<br/>tanpa deformasi", styles["td_center"]),
-            Paragraph("Lebar 1.5 cm hanya 8.2% dari keliling leher 18.2 cm per sisi sehingga tidak menyembul/kedodoran.", styles["td"]),
+            Paragraph("Inti struktural 3 titik: tali serut sulam 14 eyelet (65 cm), core Tali Pendek 30 cm, &amp; spine Tali Panjang 100 cm.", styles["td"]),
         ],
         [
             Paragraph("Kait Udang Putar (Swivel Clasp 1.5 cm)", styles["td_bold"]),
             Paragraph("Beban statis &gt; 22 kg<br/>(zinc alloy / besi tebal)", styles["td_center"]),
-            Paragraph("4 pcs (2 di Tali Pendek 30 cm, 2 di Tali Panjang 100 cm); pas persis pada lebar dalam Ring D 1.5 cm.", styles["td"]),
-        ],
-        [
-            Paragraph("Pita Webbing Nylon 1.5 cm + Jahitan X-Box", styles["td_bold"]),
-            Paragraph("Kuat tarik &gt; 90 kg;<br/>cabut jahitan X-box &gt; 25 kg", styles["td_center"]),
-            Paragraph("Cincin kerah 18 cm + 2 tab vertikal 6 cm ke bodi Ø 8.0 cm memintas pengurangan bahu (&lt; 2 mm mulur).", styles["td"]),
+            Paragraph("4 pcs (2 di Tali Pendek 30 cm, 2 di Tali Panjang 100 cm); dikaitkan LANGSUNG ke 2 kuping samping Ring Silikon.", styles["td"]),
         ],
     ]
-    load_tbl = Table(load_rows, colWidths=[150, 124, 236])
+    load_tbl = Table(load_rows, colWidths=[152, 122, 236])
     load_style: list[tuple[Any, ...]] = [
         ("BACKGROUND", (0, 0), (-1, 0), INK_DARK),
         ("BOX", (0, 0), (-1, -1), 0.75, BORDER_SLATE),
         ("INNERGRID", (0, 0), (-1, -1), 0.4, BORDER_SLATE),
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-        ("LEFTPADDING", (0, 0), (-1, -1), 6),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
-        ("TOPPADDING", (0, 0), (-1, -1), 4.5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4.5),
+        ("LEFTPADDING", (0, 0), (-1, -1), 5.5),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 5.5),
+        ("TOPPADDING", (0, 0), (-1, -1), 3.8),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3.8),
     ]
     for r_idx in range(1, len(load_rows)):
         bg = EMERALD_BG if r_idx == 2 else (SURFACE_ALT if r_idx % 2 == 0 else colors.white)
         load_style.append(("BACKGROUND", (0, r_idx), (-1, r_idx), bg))
     load_tbl.setStyle(TableStyle(load_style))
     story.append(KeepTogether([load_tbl]))
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 7))
 
-    # Hanger System Fit & Straps Callout Card (100% clean Indonesian)
-    dc = hf["drawstringChannel"]
+    # Hanger System Fit & Straps Callout Card (100% v2.0.0 Silicone Ring + Woven Drawstring)
+    sr = hf["siliconeNeckRing"]
+    dc = hf["wovenDrawstringChannel"]
     hw = hf["hardware"]
-    ss = hf["interchangeableStraps"]["shortStrap"]
-    ls = hf["interchangeableStraps"]["longStrap"]
+    ss_strap = hf["interchangeableStraps"]["shortStrap"]
+    ls_strap = hf["interchangeableStraps"]["longStrap"]
+
+    eyelet_count = dc["eyeletPattern"].split("-")[0] if "-" in dc["eyeletPattern"] else "14"
 
     hanger_body = (
-        f"• <b>Proporsi Hardware Presisi Leher Ø 5.6–5.8 cm:</b> Memakai <b>{hw['dRings']['quantityPerCase']} pcs Ring D Besi {hw['dRings']['innerWidthCm']} cm × kawat {hw['dRings']['wireThicknessMm']} mm</b> "
-        f"(hanya ~8.2% keliling leher per sisi agar rapi tanpa menyembul seperti ring 2.5–3 cm) berpasangan dengan "
-        f"<b>{hw['swivelLobsterClasps']['quantityPerCase']} pcs Kait Udang Putar {hw['swivelLobsterClasps']['innerEyeWidthCm']} cm</b> (2 untuk tali pendek, 2 untuk tali panjang).<br/>"
-        f"• <b>Kerah Ganda Anti-Melorot:</b> Pita <b>Webbing Nylon 1.5 cm × 20 cm</b> dijahit menjadi cincin tertutup <b>18.0 cm (Ø 5.73 cm)</b> di balik kerah Zona 4 + "
-        f"2 tab jangkar vertikal <b>1.5 cm × 15 cm</b> dijahit X-box turun <b>6.0 cm</b> ke bodi Ø 8.0 cm. Dikunci serutan <b>Paracord 550 4 mm</b> (potong {dc['cordCutLengthCm']} cm) + "
-        f"<b>Stopper pegas 2 lubang (Ø lubang 4.5–5.0 mm)</b> tepat di bawah bibir tutup ~6.5 cm.<br/>"
-        f"• <b>Opsi Ring Silikon &amp; PERINGATAN UKURAN:</b> Opsional pasang Ring Silikon Leher Tumbler <b>Wide-Mouth ID 5.5–5.8 cm</b> (melar 5.5–6.2 cm, untuk botol 18oz–32oz) di alur leher. "
+        f"• <b>Ring Silikon Leher Tumbler ({escape(sr['placementRangeCm'])} cm) — PERINGATAN UKURAN:</b> Pakai Ring Silikon <b>Wide-Mouth ID 5.5–5.8 cm</b> (melar 5.5–6.2 cm, untuk botol 18oz–32oz) "
+        f"dengan 2 lubang kuping samping bawaan tepat di bawah flensa tutup ulir <b>Ø ~{td['capFlangeDiameterCm']} cm</b>. "
         f"<b>PERINGATAN:</b> <u>JANGAN beli ukuran 2.8–3.0 cm untuk botol PET/Aqua</u> karena tidak akan muat di leher Cuculemon 1L!<br/>"
-        f"• <b>Konstruksi Dua Tali Inti Paracord (0% Mulur):</b> "
-        f"<b>(1) Tali Pendek ({ss['totalLengthHookToHookCm']:.0f} cm)</b>: bentang {ss['cordSpanCm']} cm dari Paracord 550 4 mm dipilin/kepang 4-helai + selongsong rajut Polycherry ketat 3.5–4.0 cm di tiap ujung pengait. "
-        f"<b>(2) Tali Panjang ({ls['totalLengthHookToHookCm']:.0f} cm / 1 m)</b>: bentang {ls['strapSpanCm']} cm selebar {ls['widthCm']} cm dengan pola <b>Thermal Stitch 8 stitch (~460–480 baris)</b> membungkus tulang inti Paracord 550 4 mm utuh dari pengait ke pengait."
+        f"• <b>Penyatuan Manset Rajut (4 Simpul Polycherry):</b> Kerah rajut atas (y = 26.2–27.8 cm) diberi takik dangkal 3 st di jam 3 &amp; jam 9 untuk kuping Ring Silikon, "
+        f"lalu kedua bagian disatukan menjadi satu unit memakai <b>4 simpul jahit lilit Polycherry</b> (depan, belakang, kiri, kanan melewati bibir bawah ring silikon &amp; tusuk atas).<br/>"
+        f"• <b>Tali Serut Sulam {escape(eyelet_count)} Eyelet ({escape(dc['heightRangeCm'])} cm):</b> Tepat di bawah Ring Silikon, potong <b>{dc['cordCutLengthCm']} cm Paracord 550 4 mm</b> lalu sulam "
+        f"<b>keluar-masuk (IN &amp; OUT)</b> melewati <b>{escape(eyelet_count)} lubang eyelet</b> ([sc 2, ch 1, sk 1] × 14) dan kunci di sisi belakang dengan <b>Stopper Pegas 2 Lubang (Ø 4.5–5.0 mm)</b> + manik rajut.<br/>"
+        f"• <b>Kait Langsung &amp; Dua Tali Inti Paracord (0% Mulur):</b> Gunakan <b>{hw['swivelLobsterClasps']['quantityPerCase']} pcs Kait Udang Putar {hw['swivelLobsterClasps']['innerEyeWidthCm']} cm</b> "
+        f"yang dikaitkan <b>LANGSUNG</b> ke 2 kuping samping Ring Silikon: <b>(1) Tali Pendek ({ss_strap['totalLengthHookToHookCm']:.0f} cm)</b> bentang {ss_strap['cordSpanCm']} cm pilin/kepang Paracord 4 mm + selongsong 4 cm; "
+        f"<b>(2) Tali Panjang ({ls_strap['totalLengthHookToHookCm']:.0f} cm / 1 m)</b> bentang {ls_strap['strapSpanCm']} cm selebar {ls_strap['widthCm']} cm pola <b>Thermal Stitch 8 st (~460–480 baris)</b> berinti Paracord 550 utuh."
     )
     story.append(
         KeepTogether(
             [
                 callout_box(
-                    "Hanger System Fit &amp; Konstruksi Tali Pendek 30 cm / Tali Panjang 100 cm",
+                    "Hanger System Fit: Ring Silikon Ø 5.5–5.8 cm + Serut Sulam + Kait Langsung (30 cm &amp; 100 cm)",
                     hanger_body,
                     accent=EMERALD_ACCENT,
                     bg_color=EMERALD_BG,
@@ -1207,8 +1235,8 @@ def _build_bom_category_table(
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ("LEFTPADDING", (0, 0), (-1, -1), 4.0),
         ("RIGHTPADDING", (0, 0), (-1, -1), 4.0),
-        ("TOPPADDING", (0, 0), (-1, -1), 3.1),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 3.1),
+        ("TOPPADDING", (0, 0), (-1, -1), 3.0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3.0),
     ]
 
     for idx, item in enumerate(items):
@@ -1241,7 +1269,7 @@ def build_section_2(
     specs: dict[str, Any],
     styles: dict[str, ParagraphStyle],
 ) -> list[Any]:
-    """Section 2: Component-Only BOM (18 items) with clickable Shopee links + Cost Breakdown."""
+    """Section 2: Component-Only BOM (15 items) with clickable Shopee links + Cost Breakdown."""
     bom: list[dict[str, Any]] = specs["bomComponents"]
     story: list[Any] = [PageBreak()]
 
@@ -1249,7 +1277,7 @@ def build_section_2(
         section_banner(
             "BAGIAN 2",
             "Bill of Materials (BOM) — Komponen Produk & Link Beli Shopee",
-            "Daftar lengkap 18 material pembentuk sarung & sistem gantungan (TANPA alat kerja) dengan tautan pencarian Shopee aktif",
+            f"Daftar lengkap {len(bom)} material pembentuk sarung & sistem gantungan (TANPA alat kerja) dengan tautan Shopee aktif",
             SHOPEE_CORAL,
             AMBER_BG,
             styles,
@@ -1273,10 +1301,16 @@ def build_section_2(
     sceptile_yarn_items = [i for i in bom if i["id"].startswith("yarn-polycherry-") and "sceptile" in i["appliesto"]]
     dragonite_only_items = [i for i in bom if i["id"].startswith("yarn-polycherry-") and i["appliesto"] == ["dragonite"]]
 
-    # Category A fits cleanly on Page 3
+    ordered_first_two = structural_items + sceptile_yarn_items
+    black_item_no = next(
+        (idx for idx, it in enumerate(ordered_first_two, 1) if it["id"] == "yarn-polycherry-black"),
+        len(structural_items) + len(sceptile_yarn_items),
+    )
+
+    # Category A (6 items) fits comfortably on Page 3
     story.append(
         _build_bom_category_table(
-            "KATEGORI A — KOMPONEN STRUKTURAL, HARDWARE GANTUNGAN & ISIAN (SCEPTILE & DRAGONITE • 9 ITEM)",
+            f"KATEGORI A — KOMPONEN STRUKTURAL, HARDWARE GANTUNGAN & ISIAN (SCEPTILE & DRAGONITE • {len(structural_items)} ITEM)",
             structural_items,
             start_no=1,
             cat_bg=BLUE_BG,
@@ -1284,11 +1318,11 @@ def build_section_2(
         )
     )
 
-    # Page 4 holds Category B + Category C + Cost Breakdown together cleanly
+    # Page 4 holds Category B (5 items) + Category C (4 items) + Cost Breakdown together cleanly
     story.append(PageBreak())
     story.append(
         _build_bom_category_table(
-            "KATEGORI B — PAKET BENANG POLYCHERRY D27: DESAIN SCEPTILE + HITAM BERSAMA (5 ITEM / 6 GULUNG)",
+            f"KATEGORI B — PAKET BENANG POLYCHERRY D27: DESAIN SCEPTILE + HITAM BERSAMA ({len(sceptile_yarn_items)} ITEM / 6 GULUNG)",
             sceptile_yarn_items,
             start_no=1 + len(structural_items),
             cat_bg=EMERALD_BG,
@@ -1298,7 +1332,7 @@ def build_section_2(
     story.append(Spacer(1, 7))
     story.append(
         _build_bom_category_table(
-            "KATEGORI C — PAKET BENANG POLYCHERRY D27: DESAIN DRAGONITE (4 ITEM KHAS + HITAM NO. 14)",
+            f"KATEGORI C — PAKET BENANG POLYCHERRY D27: DESAIN DRAGONITE ({len(dragonite_only_items)} ITEM KHAS + HITAM NO. {black_item_no})",
             dragonite_only_items,
             start_no=1 + len(structural_items) + len(sceptile_yarn_items),
             cat_bg=AMBER_BG,
@@ -1321,7 +1355,7 @@ def build_section_2(
             Paragraph("Dragonite (Kairyu)", styles["th_right"]),
         ],
         [
-            Paragraph("Subtotal Komponen Struktural, Hardware &amp; Isian (9 Item Kategori A)", styles["td"]),
+            Paragraph(f"Subtotal Komponen Struktural, Hardware &amp; Isian ({len(structural_items)} Item Kategori A)", styles["td"]),
             Paragraph(format_idr(structural_sum), styles["td_right"]),
             Paragraph(format_idr(structural_sum), styles["td_right"]),
         ],
@@ -1358,10 +1392,10 @@ def build_section_2(
         KeepTogether(
             [
                 cost_tbl,
-                Spacer(1, 4),
+                Spacer(1, 5),
                 Paragraph(
-                    "<i>Catatan efisiensi:</i> Dakron 250g, Busa EVA, Webbing Nylon 1 m, Benang Jahit Nylon, dan Benang Hitam masih menyisakan stok cukup "
-                    "untuk membuat karakter kedua (hanya perlu menambah hardware gantung, paracord, &amp; warna khas karakter kedua).",
+                    "<i>Catatan efisiensi belanja:</i> Dakron 250g, Busa EVA lembaran 20×20 cm, dan Benang Hitam 100g masih menyisakan stok cukup "
+                    "untuk membuat karakter kedua (cukup menambah Ring Silikon Wide-Mouth, Paracord 550, Stopper, Kait Udang 1.5 cm, &amp; warna khas karakter kedua).",
                     styles["body_sm"],
                 ),
             ]
@@ -1374,24 +1408,66 @@ def build_section_2(
 def build_section_3(
     specs: dict[str, Any],
     styles: dict[str, ParagraphStyle],
+    image_buffers: list[io.BytesIO],
 ) -> list[Any]:
-    """Section 3: Polycherry D27 Dual Gauge Guide & 1.3 kg Load-Path Assembly Guide."""
+    """Section 3: Real Bottle Verification, GLTF Proportion Check, Dual Gauge & 1.3 kg Assembly."""
     g = specs["projectSpecs"]["gauge"]
     ss = g["standardSingleStrand"]
     ds = g["heavyDutyDoubleStrandEquivalent"]
+    td = specs["projectSpecs"]["tumblerDimensions"]
     story: list[Any] = [PageBreak()]
 
     story.append(
         section_banner(
             "BAGIAN 3",
-            "Panduan Gauge Polycherry D27 & Perakitan Rangka Beban 1.3 kg",
-            "Perbandingan gauge 1 Helai vs 2 Helai serta langkah praktis merakit alas EVA, webbing X-box, dan tali 30/100 cm",
+            "Verifikasi Botol Asli, Panduan Gauge Polycherry D27 & Perakitan",
+            "Validasi siluet Cuculemon 1L vs referensi GLTF 1:1, gauge 1 Helai vs 2 Helai, serta perakitan Ring Silikon + Tali 30/100 cm",
             EMERALD_ACCENT,
             EMERALD_BG,
             styles,
         )
     )
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 7))
+
+    # Visual verification renders added for v2.0.0: authentic bottle + GLTF reference comparison
+    real_card = make_studio_card(
+        "cuculemon_bottle_real.png",
+        card_w=204,
+        img_box_h=178,
+        caption_html=(
+            "<b>Gambar 3.1 — Profil Fisik Cuculemon 1L Asli:</b> Silinder Ø 8.0 cm (0–21.5 cm), "
+            "bahu kubah cembung (21.5–24.8 cm), leher vertikal Ø 5.7 cm, tutup ulir &amp; handle samping."
+        ),
+        styles=styles,
+        image_buffers=image_buffers,
+        border_color=EMERALD_ACCENT,
+    )
+    gltf_card = make_studio_card(
+        "side_by_side_ref_gltf.png",
+        card_w=296,
+        img_box_h=178,
+        caption_html=(
+            "<b>Gambar 3.2 — Validasi Proporsi 1:1 vs Model Referensi 3D (<font name=\"Consolas\">scene.gltf</font>):</b> "
+            "Perbandingan langsung siluet wajah, perut 12 rusuk, sayap, ekor, &amp; biji punggung pada skala tumbler 1L."
+        ),
+        styles=styles,
+        image_buffers=image_buffers,
+        border_color=EMERALD_ACCENT,
+    )
+    verify_row = Table([[real_card, "", gltf_card]], colWidths=[204, 10, 296])
+    verify_row.setStyle(
+        TableStyle(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                ("TOPPADDING", (0, 0), (-1, -1), 0),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+            ]
+        )
+    )
+    story.append(verify_row)
+    story.append(Spacer(1, 7))
 
     story.append(
         callout_box(
@@ -1406,7 +1482,7 @@ def build_section_3(
             styles=styles,
         )
     )
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 7))
 
     story.append(Paragraph("Tabel 3.1 — Perbandingan Gauge: Single-Strand (1 Helai) vs Double-Strand (2 Helai)", styles["h3"]))
     gauge_rows = [
@@ -1436,22 +1512,22 @@ def build_section_3(
             Paragraph(f"<b>{ds['neckDiameter5_8cmStitches']} sc</b> keliling", styles["td_center"]),
         ],
         [
-            Paragraph("Tinggi Silinder Lurus (0.0–20.0 cm)", styles["td_bold"]),
-            Paragraph(f"{ss['cylinder20_0cmRows']} baris", styles["td_center"]),
-            Paragraph(f"{ds['cylinder20_0cmRows']} baris", styles["td_center"]),
+            Paragraph("Tinggi Silinder Lurus (0.0–21.5 cm)", styles["td_bold"]),
+            Paragraph(f"{ss['cylinder21_5cmRows']} baris", styles["td_center"]),
+            Paragraph(f"{ds['cylinder21_5cmRows']} baris", styles["td_center"]),
         ],
         [
-            Paragraph("Bahu Tirus 5.5 cm (20.0–25.5 cm)", styles["td_bold"]),
-            Paragraph(f"{ss['shoulder5_5cmRows']} baris (60 → 44 sc)", styles["td_center"]),
-            Paragraph(f"{ds['shoulder5_5cmRows']} baris (40 → 28 sc)", styles["td_center"]),
+            Paragraph("Bahu Kubah Cembung 3.3 cm (21.5–24.8 cm)", styles["td_bold"]),
+            Paragraph(f"{ss['shoulder3_3cmRows']} baris (60 → 44 sc)", styles["td_center"]),
+            Paragraph(f"{ds['shoulder3_3cmRows']} baris (40 → 28 sc)", styles["td_center"]),
         ],
         [
-            Paragraph("Kerah Leher 2.5 cm (25.5–28.0 cm)", styles["td_bold"]),
-            Paragraph(f"{ss['collar2_5cmRows']} baris (44 sc)", styles["td_center"]),
-            Paragraph(f"{ds['collar2_5cmRows']} baris (28 sc)", styles["td_center"]),
+            Paragraph("Kerah Leher Vertikal 3.0 cm (24.8–27.8 cm)", styles["td_bold"]),
+            Paragraph(f"{ss['collar3_0cmRows']} baris (44 sc)", styles["td_center"]),
+            Paragraph(f"{ds['collar3_0cmRows']} baris (28 sc)", styles["td_center"]),
         ],
     ]
-    gauge_tbl = Table(gauge_rows, colWidths=[150, 180, 180])
+    gauge_tbl = Table(gauge_rows, colWidths=[156, 177, 177])
     g_style: list[tuple[Any, ...]] = [
         ("BACKGROUND", (0, 0), (-1, 0), INK_DARK),
         ("BOX", (0, 0), (-1, -1), 0.75, BORDER_SLATE),
@@ -1459,8 +1535,8 @@ def build_section_3(
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ("LEFTPADDING", (0, 0), (-1, -1), 6),
         ("RIGHTPADDING", (0, 0), (-1, -1), 6),
-        ("TOPPADDING", (0, 0), (-1, -1), 4.5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4.5),
+        ("TOPPADDING", (0, 0), (-1, -1), 3.8),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3.8),
     ]
     for r_idx in range(1, len(gauge_rows)):
         bg = EMERALD_BG if r_idx in (3, 4) else (SURFACE_ALT if r_idx % 2 == 0 else colors.white)
@@ -1470,49 +1546,53 @@ def build_section_3(
     story.append(Spacer(1, 5))
     story.append(
         Paragraph(
-            "<i>Verifikasi Matematika Gauge:</i> Baik memakai <b>1 Helai (60 sc → 44 sc)</b> maupun <b>2 Helai (40 sc → 28 sc)</b>, "
-            "dimensi akhir tetap tepat <b>Ø 8.0 cm → Ø 5.8 cm × tinggi 28.0 cm</b>. Pastikan uji swatch 5×5 cm sebelum memulai agar botol pas tanpa kedodoran.",
+            f"<i>Verifikasi Matematika Gauge:</i> Baik memakai <b>1 Helai (60 sc → 44 sc)</b> maupun <b>2 Helai (40 sc → 28 sc)</b>, "
+            f"dimensi akhir tetap tepat <b>Ø {td['bodyDiameterCm']} cm → Ø {td['neckDiameterMaxCm']} cm × tinggi {td['crochetCaseHeightCm']} cm</b>. "
+            "Lakukan uji swatch 5×5 cm sebelum memulai agar botol pas tanpa celah.",
             styles["body_sm"],
         )
     )
-    story.append(Spacer(1, 10))
 
-    story.append(Paragraph("Alur Perakitan 5 Langkah — Jalur Penahan Beban 1.3 kg &amp; Pembuatan Tali", styles["h3"]))
+    # Page 6: 5-Step Assembly Workflow (Ring Silikon + Woven Drawstring + 30/100 cm Straps)
+    story.append(PageBreak())
+    story.append(Paragraph("Alur Perakitan 5 Langkah — Jalur Beban 1.3 kg (Ring Silikon &amp; Tali 30/100 cm)", styles["h3"]))
+    story.append(Spacer(1, 3))
     steps_data = [
         (
             "1",
-            "Alas Sandwich EVA Ganda (Zona 1)",
+            "Alas Sandwich EVA Ganda (Zona 1: 0.0–0.8 cm)",
             "Rajut 2 cakram alas Ø 8.0 cm (60 sc pada 1 helai atau 40 sc pada 2 helai). Potong 1 cakram <b>Busa EVA / Spon Ati tebal 4 mm berdiameter Ø 7.8 cm</b>. "
             "Selipkan EVA di tengah kedua cakram rajut, lalu kunci dengan 1 putaran <b>BLO (Back Loop Only)</b> yang mengait loop cakram luar dan dalam sekaligus. "
-            "Hasilnya alas datar 90° anti-ambles yang menyebarkan beban 1.3 kg merata dan meredam benturan.",
+            "Hasilnya alas datar 90° anti-ambles yang menyebarkan beban 1.3 kg merata dan meredam benturan saat botol diletakkan.",
         ),
         (
             "2",
-            "Jembatan Webbing Bahu &amp; Jahitan X-Box (Zona 2–3)",
-            "Potong 2 pita <b>Webbing Nylon 1.5 cm sepanjang 15 cm</b>. Lipat masing-masing melewati batang datar <b>Ring D 1.5 cm</b> sehingga menyisakan ekor ganda sepanjang ±6.5 cm. "
-            "Posisikan di sisi kiri (jam 9) dan kanan (jam 3) dinding dalam dari tinggi 25.5 cm turun ke 19.5 cm pada bodi Ø 8.0 cm, lalu jahit pola <b>kotak silang (X-box stitch)</b> memakai <b>Benang Jahit Nylon Tas No. 30</b>. "
-            "Jalur ini memintas tusukan pengurangan bahu sehingga rajutan tidak tertarik memanjang.",
+            "Bahu Kubah Cembung &amp; Takik Kuping 3-Stitch di Leher Atas (Zona 3–4: 21.5–27.8 cm)",
+            "Kerjakan pengurangan bahu kubah cembung 3.3 cm (9 baris 1 helai / 6 baris 2 helai) lalu lanjutkan kerah leher vertikal Ø 5.8 cm hingga tepat <b>27.8 cm</b>. "
+            "Pada Baris 3 kerah (25.4–26.2 cm) buat 14 lubang eyelet; lalu pada Baris 7–8 (26.6–27.8 cm) buat <b>takik dangkal 3 stitch di sisi kiri (jam 9) &amp; kanan (jam 3)</b> "
+            "supaya 2 lubang kuping samping bawaan Ring Silikon duduk rata flush di leher tanpa mengganjal.",
         ),
         (
             "3",
-            "Kerah Leher Ø 5.8 cm + Paracord Drawstring + Ring D 1.5 cm (Zona 4)",
-            "Jahitkan pita <b>Webbing Nylon 1.5 cm × 20 cm</b> membentuk cincin tertutup lingkar <b>18.0 cm (Ø 5.73 cm)</b> di sisi dalam Baris 4–6 kerah Zona 4 agar leher tidak pernah melar. "
-            "Sulamkan <b>65 cm Paracord 550 4 mm</b> melewati putaran lubang eyelet Baris 3 dan pasang <b>Stopper 2 Lubang</b> di bagian depan/belakang. "
-            "Opsional: pasangkan <b>Ring Silikon Wide-Mouth Ø 5.5–6.0 cm</b> di leher botol tepat di bawah tutup ~6.5 cm sebagai pengunci gesek ekstra.",
+            "Penyatuan Ring Silikon Wide-Mouth + Tali Serut Sulam 14 Eyelet (y = 25.4–27.8 cm)",
+            "Pasangkan <b>Ring Silikon Wide-Mouth (ID 5.5–5.8 cm)</b> di manset rajut atas (y = 26.6–27.8 cm) tepat di bawah bibir tutup Ø ~6.0 cm, lalu ikat menjadi satu kesatuan "
+            "memakai <b>4 simpul jahit lilit Polycherry</b> (depan, belakang, kiri, kanan melewati bibir bawah ring silikon &amp; tusuk kerah atas). "
+            "Tepat di bawahnya (y = 25.4–26.2 cm), sulam <b>65 cm Paracord 550 4 mm keluar-masuk (IN &amp; OUT)</b> lewat ke-14 lubang eyelet, kunci dengan <b>Stopper 2 Lubang</b> "
+            "di sisi belakang + rajut 2 manik ujung kecil (Coral untuk Sceptile / Krem untuk Dragonite).",
         ),
         (
             "4",
-            "Konstruksi Tali Pendek 30 cm (Tali Jinjing)",
-            "Potong <b>±55 cm Paracord 550 4 mm</b> (untuk bentang bersih ±22.5 cm + allowance dua pengait 7.5 cm = total <b>30.0 cm</b> dari ujung ke ujung kait). "
-            "Pilin atau kepang 4-helai, kaitkan kedua ujungnya langsung pada lubang mata <b>2 pcs Kait Udang Putar 1.5 cm</b> dengan simpul kuat/whipping, "
-            "lalu rajut <b>selongsong Polycherry ketat sepanjang 3.5–4.0 cm</b> (warna aksen karakter) menutupi sambungan kedua pangkal kait.",
+            "Konstruksi Tali Pendek 30 cm — Kait Langsung ke Kuping Ring Silikon",
+            "Potong <b>±55 cm Paracord 550 4 mm</b> (untuk bentang bersih ±22.5 cm + allowance dua pengait 7.5 cm = total <b>30.0 cm</b> ujung-ke-ujung). "
+            "Pilin atau kepang 4-helai, kaitkan kedua ujungnya pada <b>2 pcs Kait Udang Putar 1.5 cm</b>, tutup sambungan dengan <b>selongsong rajut Polycherry 4 cm</b> (motif karakter), "
+            "lalu jepitkan kedua Kait Udang <b>LANGSUNG ke 2 lubang kuping samping Ring Silikon</b>.",
         ),
         (
             "5",
-            "Konstruksi Tali Panjang 100 cm (Thermal Stitch + Inti Paracord)",
+            "Konstruksi Tali Panjang 100 cm (Thermal Stitch + Inti Paracord) — Kait Langsung ke Ring Silikon",
             "Potong <b>1.30 m Paracord 550 4 mm</b> utuh sebagai tulang anti-mulur. Rajut tali datar selebar <b>8 stitch (~1.8–2.0 cm)</b> menggunakan teknik <b>Thermal Stitch</b> "
-            "(±460–480 baris thermal hingga panjang badan strap <b>92.5 cm</b>; total <b>100.0 cm</b> termasuk 2 Kait Udang 1.5 cm). "
-            "Sambil merajut atau di akhir, selipkan inti Paracord 550 ke dalam rongga Thermal Stitch dan kaitkan ujung paracord langsung ke batang kedua Kait Udang 1.5 cm sebelum dikunci selongsong ujung (<b>0% mulur permanen</b>).",
+            "(±460–480 baris thermal hingga badan strap <b>92.5 cm</b>; total <b>100.0 cm</b> termasuk 2 Kait Udang 1.5 cm). "
+            "Selipkan inti Paracord 550 utuh ke dalam rongga Thermal Stitch hingga kedua batang Kait Udang 1.5 cm, kunci selongsong ujung 4 cm, dan jepitkan <b>LANGSUNG ke 2 kuping Ring Silikon</b> (<b>0% mulur permanen</b>).",
         ),
     ]
 
@@ -1532,14 +1612,27 @@ def build_section_3(
         ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
         ("LEFTPADDING", (0, 0), (-1, -1), 6),
         ("RIGHTPADDING", (0, 0), (-1, -1), 7),
-        ("TOPPADDING", (0, 0), (-1, -1), 5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+        ("TOPPADDING", (0, 0), (-1, -1), 5.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 5.5),
     ]
     for r_idx in range(len(step_rows)):
         s_style.append(("BACKGROUND", (0, r_idx), (0, r_idx), EMERALD_ACCENT))
         s_style.append(("BACKGROUND", (1, r_idx), (1, r_idx), SURFACE_ALT if r_idx % 2 == 1 else colors.white))
     step_tbl.setStyle(TableStyle(s_style))
     story.append(step_tbl)
+    story.append(Spacer(1, 9))
+
+    story.append(
+        callout_box(
+            "Checklist Uji Tarik &amp; Akses Tutup Botol Sebelum Pemakaian Penuh",
+            "• <b>Uji Posisi Ring Silikon:</b> Pastikan Ring Silikon berada tepat di bawah bibir tutup ulir hitam (Ø ~6.0 cm), bukan menutupi ulir drat.<br/>"
+            "• <b>Uji Buka-Tutup &amp; Handle:</b> Putar buka-tutup botol, angkat cerat flip-straw, dan ayunkan pegangan samping Cuculemon — semuanya harus 100% bebas tanpa menyentuh jambul/tanduk/antena.<br/>"
+            "• <b>Uji Beban 1.3 kg:</b> Isi botol dengan 1 liter air, tarik &amp; kunci tali serut Paracord 14 eyelet + stopper 2 lubang, jinjing pakai Tali 30 cm lalu Tali 100 cm sambil memantul ringan — leher rajut harus diam tanpa merosot.",
+            accent=BLUE_ACCENT,
+            bg_color=BLUE_BG,
+            styles=styles,
+        )
+    )
 
     return story
 
@@ -1580,25 +1673,25 @@ def build_character_section(
     if char_id == "sceptile":
         panels = [
             ("sceptile_front_30cm.png", "<b>Sudut 1 — Tampak Depan (Tali 30 cm):</b> Moncong, mata celah, kerah V Hijau Tua, sabuk Coral &amp; bilah daun lengan."),
-            ("sceptile_back_30cm.png", "<b>Sudut 2 — Tampak Belakang:</b> 6 biji kuning 3D (2×3), garis tulang belakang, stopper leher &amp; ekor daun berlapis."),
-            ("sceptile_neck_hanger.png", "<b>Sudut 3 — Detail Leher Ø 5.8 cm:</b> Jambul kembar di bawah bibir 28 cm, serut Paracord 4 mm, Ring D 1.5 cm &amp; webbing."),
-            ("sceptile_long_100cm.png", "<b>Sudut 4 — Tali Panjang 100 cm:</b> Strap datar Thermal Stitch 8 st dengan inti Paracord 550 utuh terpasang di Ring D."),
+            ("sceptile_back_30cm.png", "<b>Sudut 2 — Tampak Belakang:</b> 6 biji kuning 3D (2×3), stopper tali serut + manik Coral, 4 simpul ring &amp; ekor daun berlapis."),
+            ("sceptile_neck_hanger.png", "<b>Sudut 3 — Detail Leher Ø 5.7 cm:</b> Ring Silikon + 4 simpul Polycherry, serut Paracord sulam 14 eyelet &amp; Kait Udang langsung ke kuping ring."),
+            ("sceptile_long_100cm.png", "<b>Sudut 4 — Tali Panjang 100 cm:</b> Strap datar Thermal Stitch 8 st berinti Paracord 550 mengait langsung ke kuping samping Ring Silikon."),
         ]
     else:
         panels = [
-            ("dragonite_front_30cm.png", "<b>Sudut 1 — Tampak Depan (Tali 30 cm):</b> Panel perut Krem 11 rusuk, moncong bulat, mata oval, tanduk &amp; 6 cakar kaki."),
-            ("dragonite_back_30cm.png", "<b>Sudut 2 — Tampak Belakang:</b> Sepasang sayap 2-warna (Tosca &amp; Oranye), stopper cord lock &amp; ekor gemuk melengkung."),
-            ("dragonite_neck_hanger.png", "<b>Sudut 3 — Detail Leher Ø 5.8 cm:</b> Antena lengkung-S Krem bebas tutup, tab webbing X-box &amp; Ring D 1.5 cm + Kait Udang."),
-            ("dragonite_long_100cm.png", "<b>Sudut 4 — Tali Panjang 100 cm:</b> Strap panjang selempang 1 meter Thermal Stitch dengan selongsong pengait warna Krem."),
+            ("dragonite_front_30cm.png", "<b>Sudut 1 — Tampak Depan (Tali 30 cm):</b> Panel perut Krem 12 rusuk, moncong bulat, mata oval, tanduk &amp; 6 cakar kaki."),
+            ("dragonite_back_30cm.png", "<b>Sudut 2 — Tampak Belakang:</b> Sayap 2-warna (jam 10 &amp; 2), stopper + manik Krem, 4 simpul ring &amp; ekor gemuk 8 rusuk Krem."),
+            ("dragonite_neck_hanger.png", "<b>Sudut 3 — Detail Leher Ø 5.7 cm:</b> Antena lengkung-S bebas tutup, Ring Silikon + 4 simpul Polycherry, serut sulam &amp; Kait Udang 1.5 cm."),
+            ("dragonite_long_100cm.png", "<b>Sudut 4 — Tali Panjang 100 cm:</b> Strap panjang selempang 1 m Thermal Stitch dengan selongsong Krem mengait langsung ke kuping Ring Silikon."),
         ]
 
-    card_tl = make_studio_card(panels[0][0], 250, 196, panels[0][1], styles, image_buffers, accent)
-    card_tr = make_studio_card(panels[1][0], 250, 196, panels[1][1], styles, image_buffers, accent)
+    card_tl = make_studio_card(panels[0][0], 250, 194, panels[0][1], styles, image_buffers, accent)
+    card_tr = make_studio_card(panels[1][0], 250, 194, panels[1][1], styles, image_buffers, accent)
     row1 = Table([[card_tl, "", card_tr]], colWidths=[250, 10, 250])
     row1.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
 
-    card_bl = make_studio_card(panels[2][0], 278, 165, panels[2][1], styles, image_buffers, accent)
-    card_br = make_studio_card(panels[3][0], 222, 165, panels[3][1], styles, image_buffers, accent)
+    card_bl = make_studio_card(panels[2][0], 278, 162, panels[2][1], styles, image_buffers, accent)
+    card_br = make_studio_card(panels[3][0], 222, 162, panels[3][1], styles, image_buffers, accent)
     row2 = Table([[card_bl, "", card_br]], colWidths=[278, 10, 222])
     row2.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 0)]))
 
@@ -1716,8 +1809,8 @@ def build_character_section(
                     ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                     ("LEFTPADDING", (0, 0), (-1, -1), 8),
                     ("RIGHTPADDING", (0, 0), (-1, -1), 8),
-                    ("TOPPADDING", (0, 0), (-1, -1), 5),
-                    ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+                    ("TOPPADDING", (0, 0), (-1, -1), 4.5),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 4.5),
                 ]
             )
         )
@@ -1753,12 +1846,12 @@ def build_character_section(
                     ("BOTTOMPADDING", (0, 0), (0, 0), 0),
                     ("LEFTPADDING", (0, 1), (0, 3), 8),
                     ("RIGHTPADDING", (0, 1), (0, 3), 8),
-                    ("TOPPADDING", (0, 1), (0, 3), 4.5),
-                    ("BOTTOMPADDING", (0, 1), (0, 3), 5.0),
+                    ("TOPPADDING", (0, 1), (0, 3), 4.2),
+                    ("BOTTOMPADDING", (0, 1), (0, 3), 4.6),
                 ]
             )
         )
-        story.append(KeepTogether([z_card, Spacer(1, 7)]))
+        story.append(KeepTogether([z_card, Spacer(1, 6.5)]))
 
     return story
 
@@ -1780,7 +1873,7 @@ def main() -> None:
     story: list[Any] = []
     story.extend(build_section_1(specs, styles, image_buffers))
     story.extend(build_section_2(specs, styles))
-    story.extend(build_section_3(specs, styles))
+    story.extend(build_section_3(specs, styles, image_buffers))
     story.extend(
         build_character_section(
             "sceptile",
@@ -1811,7 +1904,7 @@ def main() -> None:
         rightMargin=MARGIN_R,
         topMargin=MARGIN_T,
         bottomMargin=MARGIN_B,
-        title="Pokemon 3D Crochet Tumbler Case — Technical Blueprint & Panduan Perajut",
+        title="Pokemon 3D Crochet Tumbler Case — Technical Blueprint v2.0 & Panduan Perajut",
         author="Sceptile & Dragonite 1L Crochet Engineering Blueprint",
         subject="Cuculemon 1L Stainless Steel Heavy-Duty Crochet Case Pattern & Shopee BOM",
     )
