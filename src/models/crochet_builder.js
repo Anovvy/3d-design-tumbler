@@ -5,51 +5,55 @@ import * as THREE from 'three';
  * Front of tumbler/character faces +Z. Left side is -X, Right side is +X, Back is -Z.
  */
 export const TUMBLER_SPECS = {
-  baseRadius: 4.0,           // Ø 8.0 cm
-  bodyTopY: 20.0,
-  shoulderTopY: 25.5,
-  neckRadius: 2.9,           // Ø 5.8 cm
-  neckTopY: 28.0,
-  capRadius: 3.25,           // Ø 6.5 cm
-  capTopY: 30.2,
-  totalHeightY: 32.0,        // Top of flip carry loop
-  caseWallThickness: 0.36,   // ~3.6 mm 5-ply milk cotton crochet gauge
-  collarInnerRadius: 2.95,
-  collarOuterRadius: 3.34,
-  dRingInnerWidth: 1.5,
-  dRingWireDiameter: 0.3,
+  baseRadius: 4.0,            // Ø 8.0 cm
+  barrelTopY: 21.5,           // Straight black barrel y = 0.0 - 21.5 cm
+  shoulderTopY: 24.8,         // Rounded convex dome shoulder y = 21.5 - 24.8 cm
+  neckRadius: 2.85,           // Ø 5.7 cm (fit target Ø 5.6 - 5.8 cm)
+  neckBandStartY: 26.0,       // Brushed silver collar starts at y = 26.0 cm
+  neckTopY: 27.8,             // Vertical neck ends at y = 27.8 cm
+  capRadius: 2.95,            // Ø 5.9 cm black screw cap body
+  capTopY: 30.4,
+  totalHeightY: 32.0,         // Top of flip-straw nozzle & thumb tab
+  caseWallThickness: 0.36,    // Tight Polycherry D27 crochet wall gauge
+  caseNeckOuterRadius: 3.24,  // Crochet cuff outer radius around Ø 5.7 cm neck
+  siliconeRingBottomY: 26.78, // Matte-black Silicone Neck Ring y = 26.78 - 27.63 cm
+  siliconeRingTopY: 27.63,
+  siliconeRingOuterRadius: 3.58,
+  drawstringY: 25.80,         // Woven eyelet drawstring line y = 25.5 - 26.1 cm
   shortStrapLengthCm: 30.0,
   longStrapLengthCm: 100.0
 };
 
 export const CHARACTER_PALETTES = {
   sceptile: {
-    base: '#73B88C',
-    anchorDark: '#4A7A5B',
-    body: '#73B88C',
-    belt: '#D66865',
-    chestBand: '#4A7A5B',
-    eyeYellow: '#E6D37A',
+    base: '#68C481',
+    anchorDark: '#438D5A',
+    body: '#68C481',
+    belt: '#D6615D',
+    chestBand: '#438D5A',
+    eyeYellow: '#E4D17C',
     eyeTrim: '#C64D4D',
-    seedYellow: '#E6D37A',
-    leafDark: '#4A7A5B',
-    leafMid: '#73B88C',
-    strapColors: ['#2F593D', '#73B88C', '#E6D37A'],
-    cuffColor: '#D66865',
-    cordEndColor: '#E6D37A'
+    seedYellow: '#E4D17C',
+    leafDark: '#438D5A',
+    leafMid: '#68C481',
+    strapColors: ['#2F593D', '#68C481', '#E4D17C'],
+    cuffColor: '#D6615D',
+    cordEndColor: '#E4D17C',
+    tackColor: '#68C481'
   },
   dragonite: {
-    base: '#E29338',
+    base: '#EC9D41',
     anchorDark: '#B56B22',
-    body: '#E29338',
-    bellyCream: '#DDD0A8',
-    bellyRib: '#BFA97A',
-    wingTeal: '#146B62',
-    irisOlive: '#676E4E',
-    clawWhite: '#ECECEC',
-    strapColors: ['#E29338', '#146B62', '#DDD0A8'],
-    cuffColor: '#DDD0A8',
-    cordEndColor: '#DDD0A8'
+    body: '#EC9D41',
+    bellyCream: '#EAD8B3',
+    bellyRib: '#C2AA7B',
+    wingTeal: '#167B75',
+    irisOlive: '#566A56',
+    clawWhite: '#DCE0E5',
+    strapColors: ['#EC9D41', '#167B75', '#EAD8B3'],
+    cuffColor: '#EAD8B3',
+    cordEndColor: '#EAD8B3',
+    tackColor: '#EAD8B3'
   }
 };
 
@@ -62,6 +66,38 @@ function mulberry32(seed) {
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+/**
+ * Shared exact radius function for the real Cuculemon 1L tumbler (y = 0.35 to 27.8 cm).
+ */
+export function getBottleRadiusAtY(y) {
+  if (y <= TUMBLER_SPECS.barrelTopY) {
+    return TUMBLER_SPECS.baseRadius;
+  }
+  if (y >= TUMBLER_SPECS.shoulderTopY) {
+    return TUMBLER_SPECS.neckRadius;
+  }
+  const t = (y - TUMBLER_SPECS.barrelTopY) / (TUMBLER_SPECS.shoulderTopY - TUMBLER_SPECS.barrelTopY);
+  // Smooth convex dome shoulder with clean neck fillet at t -> 1
+  const domeCos = Math.cos(Math.pow(t, 1.08) * Math.PI * 0.5);
+  const raw = TUMBLER_SPECS.neckRadius + (TUMBLER_SPECS.baseRadius - TUMBLER_SPECS.neckRadius) * Math.pow(Math.max(0, domeCos), 0.72);
+  if (t > 0.86) {
+    const f = (t - 0.86) / 0.14;
+    const smoothF = f * f * (3 - 2 * f);
+    return THREE.MathUtils.lerp(raw, TUMBLER_SPECS.neckRadius, smoothF * 0.35);
+  }
+  return raw;
+}
+
+/**
+ * Shared exact outer radius function for the crochet sleeve wrapping the 1L Cuculemon bottle.
+ */
+export function getCaseOuterRadiusAtY(y) {
+  if (y <= 1.5) return 4.38;
+  if (y <= TUMBLER_SPECS.barrelTopY) return 4.36;
+  if (y >= TUMBLER_SPECS.shoulderTopY) return TUMBLER_SPECS.caseNeckOuterRadius;
+  return getBottleRadiusAtY(y) + 0.38;
 }
 
 /**
@@ -90,13 +126,10 @@ export function createCrochetTextureLibrary() {
   roughCanvas.height = size;
   const rCtx = roughCanvas.getContext('2d');
 
-  // Deep stitch trough base
   bCtx.fillStyle = 'rgb(34, 34, 34)';
   bCtx.fillRect(0, 0, size, size);
-
   sCtx.fillStyle = 'rgb(198, 198, 198)';
   sCtx.fillRect(0, 0, size, size);
-
   rCtx.fillStyle = 'rgb(242, 242, 242)';
   rCtx.fillRect(0, 0, size, size);
 
@@ -126,7 +159,6 @@ export function createCrochetTextureLibrary() {
     ctx.lineTo(x1, y1);
     ctx.stroke();
 
-    // Subtle twisted yarn ply highlights
     ctx.strokeStyle = isBump
       ? 'rgba(255,255,255,0.28)'
       : isRough
@@ -145,10 +177,8 @@ export function createCrochetTextureLibrary() {
 
   for (let row = 0; row < rows; row++) {
     const rowY = row * cellH;
-    // Slight horizontal spiral offset per round (natural amigurumi spiral)
     const offset = (row % 2) * (cellW * 0.12);
 
-    // Subtle horizontal top-loop crown bar per row
     bCtx.fillStyle = 'rgba(128, 128, 128, 0.45)';
     bCtx.fillRect(0, rowY + 2, size, 7);
     sCtx.fillStyle = 'rgba(222, 222, 222, 0.45)';
@@ -162,7 +192,6 @@ export function createCrochetTextureLibrary() {
       const centerJoin = cellW * 0.08;
       const armW = cellW * 0.26;
 
-      // Left V-arm & right V-arm
       for (const side of [-1, 1]) {
         const xTop = cx + side * armSpread;
         const xBot = cx + side * centerJoin;
@@ -171,7 +200,6 @@ export function createCrochetTextureLibrary() {
         drawArm(rCtx, xTop, topY, xBot, botY, armW, false, true);
       }
 
-      // Soft milk-cotton fiber grain
       for (let f = 0; f < 10; f++) {
         const fx = cx + (rng() - 0.5) * cellW * 0.85;
         const fy = rowY + rng() * cellH;
@@ -198,7 +226,6 @@ export function createCrochetTextureLibrary() {
   const shadeMap = configureTex(shadeCanvas, true);
   const roughnessMap = configureTex(roughCanvas, false);
 
-  // Ribbed Thermal Stitch bump & shade for 100cm flat strap
   const ribCanvas = document.createElement('canvas');
   ribCanvas.width = 256;
   ribCanvas.height = 256;
@@ -219,7 +246,6 @@ export function createCrochetTextureLibrary() {
     ribCtx.fillStyle = g;
     ribCtx.fillRect(0, y0, 256, ribH);
   }
-  // Cross-yarn grooves along ribs
   ribCtx.strokeStyle = 'rgba(40,40,40,0.45)';
   ribCtx.lineWidth = 3;
   for (let x = 16; x < 256; x += 28) {
@@ -257,7 +283,6 @@ function createTwistedParacordTextures(colors) {
   bCtx.fillStyle = 'rgb(80,80,80)';
   bCtx.fillRect(0, 0, w, h);
 
-  // Draw diagonal barber-pole braided strands wrapping seamlessly across U & V
   for (let i = -4; i < strandCount * 4 + 4; i++) {
     const col = colors[((i % strandCount) + strandCount) % strandCount];
     const xStart = i * stripeW;
@@ -271,7 +296,6 @@ function createTwistedParacordTextures(colors) {
     cCtx.closePath();
     cCtx.fill();
 
-    // Strand crown bump + dark seam
     const bGrad = bCtx.createLinearGradient(xStart, 0, xStart + stripeW, 0);
     bGrad.addColorStop(0, 'rgb(50,50,50)');
     bGrad.addColorStop(0.5, 'rgb(245,245,245)');
@@ -286,7 +310,6 @@ function createTwistedParacordTextures(colors) {
     bCtx.fill();
   }
 
-  // Fine paracord weave notches
   cCtx.strokeStyle = 'rgba(0,0,0,0.16)';
   cCtx.lineWidth = 2;
   for (let y = 0; y < h; y += 16) {
@@ -311,10 +334,161 @@ function createTwistedParacordTextures(colors) {
 }
 
 /**
- * Generates a character-specific cylindrical tapestry-crochet body color texture
- * where u=0.5 is Front (+Z), u=0/1 is Back (-Z), v=0 is bottom (y=1.5), v=1 is top (y=20.0).
+ * Generates authentic Cuculemon 1L bottle finish: glossy black coat, vertical "CUCULEMON" wordmark,
+ * and metallic brushed silver wear flecks along the shoulder edge & lower neck collar transition.
  */
-function createCharacterBodyColorMap(characterId, palette, shadeMap) {
+function createCuculemonBottleTextures(profile) {
+  const w = 1024;
+  const h = 1024;
+
+  const colCanvas = document.createElement('canvas');
+  colCanvas.width = w;
+  colCanvas.height = h;
+  const cCtx = colCanvas.getContext('2d');
+
+  const metCanvas = document.createElement('canvas');
+  metCanvas.width = w;
+  metCanvas.height = h;
+  const mCtx = metCanvas.getContext('2d');
+
+  const rghCanvas = document.createElement('canvas');
+  rghCanvas.width = w;
+  rghCanvas.height = h;
+  const rCtx = rghCanvas.getContext('2d');
+
+  // Compute exact profile arc-length mapping from world Y to UV V coordinate
+  const arcLengths = [0];
+  let totalLen = 0;
+  for (let i = 1; i < profile.length; i++) {
+    totalLen += Math.hypot(profile[i].r - profile[i - 1].r, profile[i].y - profile[i - 1].y);
+    arcLengths.push(totalLen);
+  }
+  const yToCanvasPy = (yCm) => {
+    for (let i = 1; i < profile.length; i++) {
+      const y0 = profile[i - 1].y;
+      const y1 = profile[i].y;
+      if (yCm <= y1 || i === profile.length - 1) {
+        const span = Math.max(1e-5, y1 - y0);
+        const f = THREE.MathUtils.clamp((yCm - y0) / span, 0, 1);
+        const v = THREE.MathUtils.lerp(arcLengths[i - 1], arcLengths[i], f) / totalLen;
+        return (1 - v) * h;
+      }
+    }
+    return 0;
+  };
+
+  // Base satin-gloss black coat (calibrated charcoal-black for crisp rim highlight separation)
+  cCtx.fillStyle = '#1b1f26';
+  cCtx.fillRect(0, 0, w, h);
+  mCtx.fillStyle = 'rgb(48,48,48)';
+  mCtx.fillRect(0, 0, w, h);
+  rCtx.fillStyle = 'rgb(74,74,74)';
+  rCtx.fillRect(0, 0, w, h);
+
+  // Subtle metallic wear around dome shoulder (y = 20.6 - 24.4 cm) & neck collar boundary (y = 25.4 - 26.0 cm)
+  const rng = mulberry32(9177);
+  const paintWearFlake = (px, py, rx, ry, rot, alpha = 1) => {
+    cCtx.save();
+    cCtx.translate(px, py);
+    cCtx.rotate(rot);
+    cCtx.fillStyle = `rgba(205, 212, 220, ${alpha})`;
+    cCtx.beginPath();
+    cCtx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+    cCtx.fill();
+    cCtx.restore();
+
+    mCtx.save();
+    mCtx.translate(px, py);
+    mCtx.rotate(rot);
+    mCtx.fillStyle = `rgba(235, 235, 235, ${alpha})`;
+    mCtx.beginPath();
+    mCtx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+    mCtx.fill();
+    mCtx.restore();
+
+    rCtx.save();
+    rCtx.translate(px, py);
+    rCtx.rotate(rot);
+    rCtx.fillStyle = `rgba(56, 56, 56, ${alpha})`;
+    rCtx.beginPath();
+    rCtx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+    rCtx.fill();
+    rCtx.restore();
+  };
+
+  // Dome edge metallic silver wear belt (centered ~y = 21.6 - 23.8 cm)
+  for (let i = 0; i < 160; i++) {
+    const px = rng() * w;
+    const yCm = 20.8 + rng() * 2.85;
+    const py = yToCanvasPy(yCm);
+    const rx = 4 + rng() * 22;
+    const ry = 2 + rng() * 7;
+    paintWearFlake(px, py, rx, ry, (rng() - 0.5) * 0.45, 0.88);
+    if (px + rx > w) paintWearFlake(px - w, py, rx, ry, 0, 0.88);
+    if (px - rx < 0) paintWearFlake(px + w, py, rx, ry, 0, 0.88);
+  }
+  // Thin silver scuff line near top shoulder bend (~y = 23.6 cm) & jagged collar border (y = 25.65-26.0)
+  for (let i = 0; i < 65; i++) {
+    const px = rng() * w;
+    const py = yToCanvasPy(23.5 + (rng() - 0.5) * 0.35);
+    paintWearFlake(px, py, 6 + rng() * 14, 1.5 + rng() * 2.8, 0, 0.92);
+  }
+  for (let i = 0; i < 70; i++) {
+    const px = rng() * w;
+    const py = yToCanvasPy(25.72 + rng() * 0.28);
+    paintWearFlake(px, py, 5 + rng() * 16, 2 + rng() * 5, 0, 0.94);
+  }
+
+  // Crisp vertical CUCULEMON wordmark centered toward front (+Z, u = 0.54) from y = 11.8 to 19.6 cm
+  const logoCenterX = w * 0.535;
+  const logoTopY = yToCanvasPy(19.5);
+  const logoBotY = yToCanvasPy(11.6);
+  const logoMidY = (logoTopY + logoBotY) * 0.5;
+
+  cCtx.save();
+  cCtx.translate(logoCenterX, logoMidY);
+  cCtx.rotate(Math.PI / 2);
+  cCtx.scale(0.84, 1.0); // Match tall aspect along cylinder circumference
+  cCtx.fillStyle = '#dde3e8';
+  cCtx.font = '700 44px "Inter", "Segoe UI", Arial, sans-serif';
+  cCtx.textAlign = 'center';
+  cCtx.textBaseline = 'middle';
+  cCtx.fillText('CUCULEMON', 0, 0);
+  cCtx.restore();
+
+  rCtx.save();
+  rCtx.translate(logoCenterX, logoMidY);
+  rCtx.rotate(Math.PI / 2);
+  rCtx.scale(0.84, 1.0);
+  rCtx.fillStyle = 'rgb(140, 140, 140)';
+  rCtx.font = '700 44px "Inter", "Segoe UI", Arial, sans-serif';
+  rCtx.textAlign = 'center';
+  rCtx.textBaseline = 'middle';
+  rCtx.fillText('CUCULEMON', 0, 0);
+  rCtx.restore();
+
+  const map = new THREE.CanvasTexture(colCanvas);
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.anisotropy = 8;
+  map.wrapS = THREE.RepeatWrapping;
+
+  const metalnessMap = new THREE.CanvasTexture(metCanvas);
+  metalnessMap.colorSpace = THREE.NoColorSpace;
+  metalnessMap.wrapS = THREE.RepeatWrapping;
+
+  const roughnessMap = new THREE.CanvasTexture(rghCanvas);
+  roughnessMap.colorSpace = THREE.NoColorSpace;
+  roughnessMap.wrapS = THREE.RepeatWrapping;
+
+  return { map, metalnessMap, roughnessMap };
+}
+
+/**
+ * Generates a character-specific cylindrical tapestry-crochet body color texture
+ * spanning y = 1.5 to 24.8 cm (unified barrel + curved dome shoulder) for zero material seams.
+ * u=0.5 is Front (+Z), u=0/1 is Back (-Z), v=0 is bottom (y=1.5), v=1 is top (y=24.8).
+ */
+function createCharacterBodyColorMap(characterId, palette, shadeMap, profile) {
   const w = 1024;
   const h = 1024;
   const canvas = document.createElement('canvas');
@@ -322,34 +496,50 @@ function createCharacterBodyColorMap(characterId, palette, shadeMap) {
   canvas.height = h;
   const ctx = canvas.getContext('2d');
 
-  // Base character yarn color
   ctx.fillStyle = palette.body;
   ctx.fillRect(0, 0, w, h);
 
-  // Helper to convert cm Y (1.5 .. 20.0) into canvas Y (1024 at bottom -> 0 at top)
+  // Match buildSeamlessLatheGeometry arc-length UV parameterization exactly
+  const arcLengths = [0];
+  let totalLen = 0;
+  for (let i = 1; i < profile.length; i++) {
+    totalLen += Math.hypot(profile[i].r - profile[i - 1].r, profile[i].y - profile[i - 1].y);
+    arcLengths.push(totalLen);
+  }
+  if (totalLen === 0) totalLen = 1;
+
   const yCmToPx = (yCm) => {
-    const t = Math.max(0, Math.min(1, (yCm - 1.5) / (20.0 - 1.5)));
-    return (1 - t) * h;
+    if (yCm <= profile[0].y) return h;
+    for (let i = 1; i < profile.length; i++) {
+      const y0 = profile[i - 1].y;
+      const y1 = profile[i].y;
+      if (yCm <= y1 || i === profile.length - 1) {
+        const span = Math.max(1e-5, y1 - y0);
+        const f = THREE.MathUtils.clamp((yCm - y0) / span, 0, 1);
+        const v = THREE.MathUtils.lerp(arcLengths[i - 1], arcLengths[i], f) / totalLen;
+        return (1 - v) * h;
+      }
+    }
+    return 0;
   };
 
   if (characterId === 'sceptile') {
-    // Continuous Coral Red belly belt (y = 7.0 to 9.5 cm)
-    const beltTop = yCmToPx(9.5);
-    const beltBot = yCmToPx(7.0);
+    // Continuous Coral Red belly belt (y = 7.2 to 9.8 cm)
+    const beltTop = yCmToPx(9.8);
+    const beltBot = yCmToPx(7.2);
     ctx.fillStyle = palette.belt;
     ctx.fillRect(0, beltTop, w, beltBot - beltTop);
 
-    // Subtle darker stitch outline bordering the coral belt
     ctx.fillStyle = 'rgba(85, 32, 30, 0.24)';
     ctx.fillRect(0, beltTop, w, 4);
     ctx.fillRect(0, beltBot - 4, w, 4);
 
-    // Dark green chest collar band (y = 16.0 to 17.5 cm) with crisp front V-dip at u=0.5
-    const bandTopY = yCmToPx(17.5);
-    const bandBotY = yCmToPx(16.0);
+    // Dark green chest collar band (y = 17.5 to 19.0 cm) with crisp front V-dip at u=0.5
+    const bandTopY = yCmToPx(19.0);
+    const bandBotY = yCmToPx(17.5);
     const vCenter = w * 0.5;
-    const vHalfWidth = w * 0.085;
-    const vDip = (yCmToPx(15.0) - bandBotY);
+    const vHalfWidth = w * 0.088;
+    const vDip = yCmToPx(16.2) - bandBotY;
 
     ctx.fillStyle = palette.chestBand;
     ctx.beginPath();
@@ -366,13 +556,13 @@ function createCharacterBodyColorMap(characterId, palette, shadeMap) {
     ctx.closePath();
     ctx.fill();
   } else if (characterId === 'dragonite') {
-    // Rounded Cream Belly Panel across front +Z (u = 0.5 ± 0.165, y = 2.2 to 20.0 cm)
+    // Unified Cream Belly & Ribbed Throat Panel across front +Z (y = 2.0 to 22.90 cm, seamless over shoulder dome)
     const centerX = w * 0.5;
-    const topY = yCmToPx(20.0);
+    const topY = yCmToPx(22.90);
     const botY = yCmToPx(2.0);
     const midY = (topY + botY) * 0.5;
     const radiusX = w * 0.165;
-    const radiusY = (botY - topY) * 0.52;
+    const radiusY = (botY - topY) * 0.50;
 
     ctx.save();
     ctx.beginPath();
@@ -382,8 +572,7 @@ function createCharacterBodyColorMap(characterId, palette, shadeMap) {
     ctx.fillStyle = palette.bellyCream;
     ctx.fillRect(0, 0, w, h);
 
-    // 10 crisp horizontal rib lines (#BFA97A)
-    const ribYs = [3.6, 5.2, 6.8, 8.4, 10.0, 11.6, 13.2, 14.8, 16.4, 18.0, 19.3];
+    const ribYs = [3.6, 5.2, 6.8, 8.4, 10.0, 11.6, 13.2, 14.8, 16.4, 18.0, 19.6, 21.1, 22.2];
     ctx.fillStyle = palette.bellyRib;
     for (const ry of ribYs) {
       const py = yCmToPx(ry);
@@ -391,7 +580,6 @@ function createCharacterBodyColorMap(characterId, palette, shadeMap) {
     }
     ctx.restore();
 
-    // Subtle crochet seam border around cream panel
     ctx.strokeStyle = palette.bellyRib;
     ctx.lineWidth = 6;
     ctx.beginPath();
@@ -399,17 +587,16 @@ function createCharacterBodyColorMap(characterId, palette, shadeMap) {
     ctx.stroke();
   }
 
-  // Multiply subtle tiled stitch shade so color transitions show crisp crochet loops
   const tileCanvas = shadeMap.image;
   if (tileCanvas) {
     ctx.save();
     ctx.globalCompositeOperation = 'multiply';
     const repX = 6;
-    const repY = 5;
+    const repY = 6.6;
     const tw = w / repX;
     const th = h / repY;
     for (let ix = 0; ix < repX; ix++) {
-      for (let iy = 0; iy < repY; iy++) {
+      for (let iy = 0; iy < Math.ceil(repY); iy++) {
         ctx.drawImage(tileCanvas, ix * tw, iy * th, tw, th);
       }
     }
@@ -429,7 +616,6 @@ function createCharacterBodyColorMap(characterId, palette, shadeMap) {
  * Builds a Lathe-style surface geometry from `[{ r, y }]` profile points
  * with guaranteed UV mapping:
  *   u = 0.0 -> Back (-Z), u = 0.25 -> Left (-X), u = 0.5 -> Front (+Z), u = 0.75 -> Right (+X), u = 1.0 -> Back (-Z).
- *   v = 0.0 -> bottom point, v = 1.0 -> top point (proportional to arc length).
  */
 function buildSeamlessLatheGeometry(profile, radialSegments = 64, flipWinding = false) {
   const segCount = radialSegments;
@@ -452,9 +638,6 @@ function buildSeamlessLatheGeometry(profile, radialSegments = 64, flipWinding = 
     const v = arcLengths[j] / totalLen;
     for (let i = 0; i <= segCount; i++) {
       const u = i / segCount;
-      // theta = PI at u=0 (Back -Z), 0/2PI at u=0.5 (Front +Z)
-      // At u=0.25 -> theta = 1.5 PI -> sin = -1 (Left -X), cos = 0
-      // At u=0.75 -> theta = 2.5 PI -> sin = +1 (Right +X), cos = 0
       const theta = Math.PI + u * Math.PI * 2;
       const x = r * Math.sin(theta);
       const z = r * Math.cos(theta);
@@ -488,9 +671,6 @@ function buildSeamlessLatheGeometry(profile, radialSegments = 64, flipWinding = 
   return geom;
 }
 
-/**
- * Helper to create a realistic matte milk-cotton yarn material with procedural crochet bump & sheen.
- */
 function createYarnMaterial(colorHex, texLib, repeatX = 4, repeatY = 4, customColorMap = null) {
   const bump = texLib.bumpMap.clone();
   bump.repeat.set(repeatX, repeatY);
@@ -508,9 +688,9 @@ function createYarnMaterial(colorHex, texLib, repeatX = 4, repeatY = 4, customCo
   }
 
   const baseColor = new THREE.Color(customColorMap ? '#ffffff' : colorHex);
-  const sheenColor = new THREE.Color(colorHex).lerp(new THREE.Color('#ffffff'), 0.35);
+  const sheenColor = new THREE.Color(colorHex).lerp(new THREE.Color('#ffffff'), 0.32);
 
-  const mat = new THREE.MeshPhysicalMaterial({
+  return new THREE.MeshPhysicalMaterial({
     color: baseColor,
     map,
     bumpMap: bump,
@@ -523,62 +703,60 @@ function createYarnMaterial(colorHex, texLib, repeatX = 4, repeatY = 4, customCo
     sheenColor,
     clearcoat: 0.0
   });
-  mat.userData.originalEmissive = new THREE.Color(0x000000);
-  return mat;
 }
 
-function createMetalMaterial(colorHex = '#8d98a5', roughness = 0.24) {
-  const mat = new THREE.MeshStandardMaterial({
+function createMetalMaterial(colorHex = '#9aa5b2', roughness = 0.24) {
+  return new THREE.MeshStandardMaterial({
     color: colorHex,
-    metalness: 0.92,
+    metalness: 0.90,
     roughness
   });
-  mat.userData.originalEmissive = new THREE.Color(0x000000);
-  return mat;
 }
 
-/**
- * Tags every mesh inside a Group with zone metadata for raycasting and zone highlighting.
- */
-function tagZone(object3d, zoneId, partName) {
+function configureShadowMesh(object3d, partName) {
   object3d.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = true;
       child.receiveShadow = true;
-      child.userData.zoneId = zoneId;
-      child.userData.partName = partName;
+      if (partName) child.userData.partName = partName;
     }
   });
   return object3d;
 }
 
 /**
- * Builds the 1:1 cm 1L Cuculemon Stainless Steel Tumbler (y = 0 to 32.0 cm).
+ * Builds the authentic 1:1 cm 1L Cuculemon Stainless Steel Tumbler (y = 0.35 to 32.0 cm):
+ * - y = 0.35 - 21.5 cm: Glossy black straight cylinder (Ø 8.0 cm) + vertical CUCULEMON text
+ * - y = 21.5 - 24.8 cm: Rounded convex dome shoulder with subtle metallic silver wear edge
+ * - y = 24.8 - 27.8 cm: Vertical cylindrical neck (Ø 5.7 cm) -> brushed steel collar (26.0 - 27.8 cm)
+ * - y = 27.8 - 32.0 cm: Smooth matte-black screw cap + top flip-straw nozzle + side teardrop carry loop
  */
 export function buildTumbler1L() {
   const group = new THREE.Group();
   group.name = 'tumbler-1l';
 
-  // Inner bottle body sits cleanly inside the 0.35cm reinforced base
   const bodyProfile = [
     { r: 0.0, y: 0.35 },
-    { r: 3.72, y: 0.35 },
-    { r: 4.0, y: 0.65 },
-    { r: 4.0, y: 20.0 },
-    // Smooth tapered shoulder (y = 20.0 to 25.5, r = 4.0 -> 2.9)
-    { r: 3.92, y: 20.9 },
-    { r: 3.74, y: 21.8 },
-    { r: 3.50, y: 22.7 },
-    { r: 3.24, y: 23.7 },
-    { r: 3.02, y: 24.6 },
-    { r: 2.90, y: 25.5 }
+    { r: 3.55, y: 0.35 },
+    { r: 3.92, y: 0.55 },
+    { r: 4.00, y: 0.92 },
+    { r: 4.00, y: 21.5 }
   ];
+  for (let s = 1; s <= 10; s++) {
+    const y = 21.5 + (s / 10) * (TUMBLER_SPECS.shoulderTopY - 21.5);
+    bodyProfile.push({ r: getBottleRadiusAtY(y), y });
+  }
+  bodyProfile.push({ r: TUMBLER_SPECS.neckRadius, y: 26.02 });
 
-  const bodyGeom = buildSeamlessLatheGeometry(bodyProfile, 56);
+  const bottleTex = createCuculemonBottleTextures(bodyProfile);
+  const bodyGeom = buildSeamlessLatheGeometry(bodyProfile, 64);
   const bodyMat = new THREE.MeshStandardMaterial({
-    color: '#2c3844',
-    metalness: 0.32,
-    roughness: 0.44
+    color: '#ffffff',
+    map: bottleTex.map,
+    metalnessMap: bottleTex.metalnessMap,
+    metalness: 0.95,
+    roughnessMap: bottleTex.roughnessMap,
+    roughness: 0.95
   });
   const bodyMesh = new THREE.Mesh(bodyGeom, bodyMat);
   bodyMesh.name = 'bottle-body';
@@ -586,76 +764,108 @@ export function buildTumbler1L() {
   bodyMesh.receiveShadow = true;
   group.add(bodyMesh);
 
-  // Brushed stainless neck band (y = 25.5 to 28.0 cm, r = 2.9 cm / Ø 5.8 cm)
+  // Exposed brushed stainless neck collar (y = 26.0 to 27.8 cm, Ø 5.7 cm)
   const neckProfile = [
-    { r: 2.90, y: 25.5 },
-    { r: 2.90, y: 28.0 },
-    { r: 2.72, y: 28.0 }
+    { r: TUMBLER_SPECS.neckRadius, y: 26.0 },
+    { r: TUMBLER_SPECS.neckRadius, y: 27.8 },
+    { r: 2.66, y: 27.8 }
   ];
   const neckGeom = buildSeamlessLatheGeometry(neckProfile, 56);
   const neckMat = new THREE.MeshStandardMaterial({
-    color: '#cfd7df',
-    metalness: 0.90,
-    roughness: 0.20
+    color: '#d4dce4',
+    metalness: 0.92,
+    roughness: 0.21
   });
   const neckMesh = new THREE.Mesh(neckGeom, neckMat);
   neckMesh.name = 'bottle-neck';
   neckMesh.castShadow = true;
   group.add(neckMesh);
 
-  // Black screw cap (y = 28.0 to 30.2 cm, r = 3.25 cm / Ø 6.5 cm)
+  // Smooth matte-black screw cap + flip-straw nozzle + side-hinged teardrop carry handle
   const capGroup = new THREE.Group();
   capGroup.name = 'bottle-cap';
-  const capProfile = [
-    { r: 2.85, y: 28.0 },
-    { r: 3.25, y: 28.04 },
-    { r: 3.25, y: 29.85 },
-    { r: 3.08, y: 30.2 },
-    { r: 0.0, y: 30.2 }
-  ];
   const capMat = new THREE.MeshStandardMaterial({
-    color: '#191d22',
+    color: '#16181c',
     metalness: 0.08,
-    roughness: 0.48
+    roughness: 0.44
   });
-  const capMesh = new THREE.Mesh(buildSeamlessLatheGeometry(capProfile, 48), capMat);
+
+  const capProfile = [
+    { r: 2.75, y: 27.80 },
+    { r: 2.95, y: 27.84 },
+    { r: 2.95, y: 30.15 },
+    { r: 2.82, y: 30.40 },
+    { r: 2.48, y: 30.40 },
+    { r: 2.38, y: 30.18 }, // subtle top recess pocket
+    { r: 0.0, y: 30.18 }
+  ];
+  const capMesh = new THREE.Mesh(buildSeamlessLatheGeometry(capProfile, 56), capMat);
   capMesh.castShadow = true;
   capGroup.add(capMesh);
 
-  // Grip ribs around black cap
-  for (let i = 0; i < 24; i++) {
-    const a = (i / 24) * Math.PI * 2;
-    const rib = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.55, 0.16), capMat);
-    rib.position.set(Math.sin(a) * 3.24, 28.95, Math.cos(a) * 3.24);
-    rib.rotation.y = a;
-    capGroup.add(rib);
-  }
+  // Top flat flip-straw channel cover bar & hinged spout nozzle + angled thumb flip tab (reaching y = 32.0 cm)
+  const strawChannel = new THREE.Mesh(new THREE.BoxGeometry(1.45, 0.48, 3.65), capMat);
+  strawChannel.position.set(0, 30.36, 0.25);
+  capGroup.add(strawChannel);
 
-  // Hinged flip carry loop at side reaching y = 32.0 cm (UNCOVERED area)
-  const loopCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-1.35, 29.75, -2.55),
-    new THREE.Vector3(-1.65, 31.35, -2.95),
-    new THREE.Vector3(0.0, 32.0, -3.15),
-    new THREE.Vector3(1.65, 31.35, -2.95),
-    new THREE.Vector3(1.35, 29.75, -2.55)
-  ]);
-  const loopMesh = new THREE.Mesh(new THREE.TubeGeometry(loopCurve, 32, 0.28, 12, false), capMat);
+  const plugDome = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.72, 0.55, 20), capMat);
+  plugDome.position.set(0, 30.58, 1.35);
+  capGroup.add(plugDome);
+
+  const flipSpout = new THREE.Mesh(new THREE.BoxGeometry(0.88, 1.15, 0.28), capMat);
+  flipSpout.position.set(0, 31.18, 0.12);
+  flipSpout.rotation.x = 0.42;
+  flipSpout.castShadow = true;
+  capGroup.add(flipSpout);
+
+  const spoutTip = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.34, 0.55, 14), capMat);
+  spoutTip.position.set(0, 31.68, -0.15);
+  spoutTip.rotation.x = 0.42;
+  capGroup.add(spoutTip);
+
+  // Hinged Side Carry Loop Assembly rotated cleanly toward back-right (130° from +Z)
+  // Clears left/right strap clasps (±90°) and rear drawstring lock (180°) while staying clearly visible
+  const handlePivot = new THREE.Group();
+  handlePivot.rotation.y = Math.PI * 0.72;
+
+  const hingeLug = new THREE.Mesh(new THREE.BoxGeometry(1.72, 1.05, 1.48), capMat);
+  hingeLug.position.set(0, 30.08, 3.22);
+  hingeLug.castShadow = true;
+  handlePivot.add(hingeLug);
+
+  const pinMat = createMetalMaterial('#c4ccd4', 0.22);
+  const hingePin = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 1.92, 12), pinMat);
+  hingePin.rotation.z = Math.PI / 2;
+  hingePin.position.set(0, 30.15, 3.55);
+  handlePivot.add(hingePin);
+
+  // Thick molded teardrop carry loop hanging gracefully down outside the neck & Silicone Ring (clearance r >= 3.82 cm)
+  const teardropPts = [
+    new THREE.Vector3(-0.78, 30.12, 3.58),
+    new THREE.Vector3(-1.32, 28.45, 3.92),
+    new THREE.Vector3(-1.42, 26.20, 4.02),
+    new THREE.Vector3(-1.12, 24.85, 3.88),
+    new THREE.Vector3(0.0, 24.68, 3.82),
+    new THREE.Vector3(1.12, 24.85, 3.88),
+    new THREE.Vector3(1.42, 26.20, 4.02),
+    new THREE.Vector3(1.32, 28.45, 3.92),
+    new THREE.Vector3(0.78, 30.12, 3.58)
+  ];
+  const teardropCurve = new THREE.CatmullRomCurve3(teardropPts, true);
+  const loopGeom = buildFlatRibbonAlongCurve(teardropCurve, 0.56, 0.34, 72);
+  const loopMesh = new THREE.Mesh(loopGeom, capMat);
   loopMesh.castShadow = true;
-  capGroup.add(loopMesh);
+  handlePivot.add(loopMesh);
 
-  // Hinge bridge on cap back
-  const hingeMesh = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.72, 0.85), capMat);
-  hingeMesh.position.set(0, 29.65, -2.7);
-  capGroup.add(hingeMesh);
-
+  capGroup.add(handlePivot);
   group.add(capGroup);
 
-  // Subtle X-Ray wireframe silhouette shell (hidden by default, shown in X-Ray mode)
+  // Subtle X-Ray wireframe silhouette shell
   const xrayWireMat = new THREE.MeshBasicMaterial({
-    color: '#5ad2ff',
+    color: '#6ec8f5',
     wireframe: true,
     transparent: true,
-    opacity: 0.24
+    opacity: 0.22
   });
   const xrayShell = new THREE.Mesh(bodyGeom, xrayWireMat);
   xrayShell.visible = false;
@@ -672,7 +882,7 @@ export function buildTumbler1L() {
       mat.depthWrite = !enabled;
       if (mat === bodyMat) {
         mat.emissive.set(enabled ? '#1f7ca8' : '#000000');
-        mat.emissiveIntensity = enabled ? 0.45 : 0;
+        mat.emissiveIntensity = enabled ? 0.42 : 0;
       }
       mat.needsUpdate = true;
     }
@@ -682,27 +892,27 @@ export function buildTumbler1L() {
 }
 
 /**
- * Builds the 4-zone crochet shell (Zone 1 Base, Zone 2 Body, Zone 3 Tapered Shoulder, Zone 4 Collar).
+ * Builds the 4-part tight crochet shell wrapping the real Cuculemon 1L bottle (y = 0.0 to 27.95 cm).
  */
 function buildCaseShell(characterId, palette, texLib) {
   const shellGroup = new THREE.Group();
   shellGroup.name = `${characterId}-shell`;
 
-  // Zone 1: Reinforced Base (0.0 to 1.5 cm)
+  // 1. Reinforced Base (0.0 to 1.5 cm)
   const baseGroup = new THREE.Group();
   const baseProfile = [
     { r: 0.0, y: 0.0 },
     { r: 4.18, y: 0.0 },
     { r: 4.38, y: 0.25 },
     { r: 4.38, y: 1.42 },
-    { r: 4.44, y: 1.47 }, // BLO ridge
+    { r: 4.44, y: 1.47 },
     { r: 4.36, y: 1.50 }
   ];
-  const baseMat = createYarnMaterial(palette.base, texLib, 6, 1.2);
+  const baseMat = createYarnMaterial(palette.anchorDark || palette.base, texLib, 6, 1.2);
   const baseMesh = new THREE.Mesh(buildSeamlessLatheGeometry(baseProfile, 64), baseMat);
   baseGroup.add(baseMesh);
 
-  // Internal EVA Foam Disc (0.25 to 0.55 cm, visible in X-Ray mode)
+  // Internal EVA Foam Disc (4 mm, visible in X-Ray mode)
   const evaMat = new THREE.MeshStandardMaterial({
     color: '#202833',
     roughness: 0.85,
@@ -710,75 +920,62 @@ function buildCaseShell(characterId, palette, texLib) {
     emissive: '#142636',
     emissiveIntensity: 0.3
   });
-  const evaDisc = new THREE.Mesh(new THREE.CylinderGeometry(3.85, 3.85, 0.3, 48), evaMat);
-  evaDisc.position.y = 0.40;
+  const evaDisc = new THREE.Mesh(new THREE.CylinderGeometry(3.85, 3.85, 0.38, 48), evaMat);
+  evaDisc.position.y = 0.42;
   evaDisc.name = 'eva-foam-disc';
   baseGroup.add(evaDisc);
 
-  tagZone(baseGroup, 'zone-1', 'Base & EVA Foam Reinforcement (0–1.5 cm)');
+  configureShadowMesh(baseGroup, 'Reinforced Base & EVA Foam (0–1.5 cm)');
   shellGroup.add(baseGroup);
 
-  // Zone 2: Cylindrical Body (1.5 to 20.0 cm)
-  const bodyColorTex = createCharacterBodyColorMap(characterId, palette, texLib.shadeMap);
-  const bodyProfile = [
-    { r: 4.36, y: 1.50 },
-    { r: 4.36, y: 20.0 }
-  ];
-  const bodyMat = createYarnMaterial('#ffffff', texLib, 6, 5.2, bodyColorTex);
-  const bodyMesh = new THREE.Mesh(buildSeamlessLatheGeometry(bodyProfile, 64), bodyMat);
-  tagZone(bodyMesh, 'zone-2', 'Main Crochet Body Sleeve (1.5–20.0 cm)');
+  // 2. Unified Barrel + Convex Dome Shoulder Sleeve (1.50 to 24.80 cm) for 100% seamless pattern & Dragonite throat
+  const mainProfile = [{ r: 4.36, y: 1.50 }];
+  for (let s = 0; s <= 14; s++) {
+    const y = TUMBLER_SPECS.barrelTopY + (s / 14) * (TUMBLER_SPECS.shoulderTopY - TUMBLER_SPECS.barrelTopY);
+    mainProfile.push({ r: getCaseOuterRadiusAtY(y), y });
+  }
+  const bodyColorTex = createCharacterBodyColorMap(characterId, palette, texLib.shadeMap, mainProfile);
+  const bodyMat = createYarnMaterial('#ffffff', texLib, 6, 6.6, bodyColorTex);
+  const bodyMesh = new THREE.Mesh(buildSeamlessLatheGeometry(mainProfile, 64), bodyMat);
+  configureShadowMesh(bodyMesh, 'Main Crochet Body & Dome Shoulder Sleeve (1.5–24.8 cm)');
   shellGroup.add(bodyMesh);
 
-  // Zone 3: Tapered Shoulder (20.0 to 25.5 cm)
-  const shoulderProfile = [
-    { r: 4.36, y: 20.0 },
-    { r: 4.26, y: 20.9 },
-    { r: 4.08, y: 21.8 },
-    { r: 3.84, y: 22.7 },
-    { r: 3.60, y: 23.7 },
-    { r: 3.42, y: 24.6 },
-    { r: 3.33, y: 25.5 }
-  ];
-  const shoulderMat = createYarnMaterial(palette.body, texLib, 5.5, 1.8);
-  const shoulderMesh = new THREE.Mesh(buildSeamlessLatheGeometry(shoulderProfile, 64), shoulderMat);
-  tagZone(shoulderMesh, 'zone-3', 'Tapered Shoulder & Character Face (20.0–25.5 cm)');
-  shellGroup.add(shoulderMesh);
-
-  // Zone 4: Snug Neck Collar (25.5 to 28.0 cm) + Inner Liner Lip
-  const collarGroup = new THREE.Group();
+  // 3. Vertical Neck Collar Cuff (24.8 to 27.95 cm) with recessed drawstring groove at y = 25.80 cm
   const collarProfile = [
-    { r: 3.33, y: 25.5 },
-    { r: 3.38, y: 25.8 },
-    { r: 3.36, y: 26.35 },
-    { r: 3.45, y: 26.80 }, // Drawstring casing bulge
-    { r: 3.36, y: 27.30 },
-    { r: 3.31, y: 27.90 },
-    { r: 3.16, y: 28.02 }, // Top rim lip
-    { r: 2.95, y: 27.95 }, // Inner collar wall hugging Ø 5.8 cm neck
-    { r: 2.95, y: 25.5 }
+    { r: 3.24, y: 24.80 },
+    { r: 3.28, y: 25.35 },
+    { r: 3.16, y: 25.60 },
+    { r: 3.12, y: 25.80 }, // subtle recessed eyelet groove around y = 25.80 cm
+    { r: 3.16, y: 26.02 },
+    { r: 3.28, y: 26.30 },
+    { r: 3.26, y: 26.68 },
+    { r: 3.20, y: 26.80 }, // seats cleanly into Silicone Neck Ring (26.78 - 27.63 cm)
+    { r: 3.18, y: 27.65 },
+    { r: 3.25, y: 27.92 }, // top rolled crochet lip above Silicone Ring
+    { r: 3.04, y: 28.00 },
+    { r: 2.89, y: 27.90 }, // hugs Ø 5.7 cm vertical neck tightly
+    { r: 2.89, y: 24.80 }
   ];
-  const collarMat = createYarnMaterial(palette.body, texLib, 5.0, 1.1);
+  const collarMat = createYarnMaterial(palette.body, texLib, 5.2, 1.15);
   const collarMesh = new THREE.Mesh(buildSeamlessLatheGeometry(collarProfile, 64), collarMat);
-  collarGroup.add(collarMesh);
-
-  tagZone(collarGroup, 'zone-4', 'Snug Neck Collar (25.5–28.0 cm)');
-  shellGroup.add(collarGroup);
+  configureShadowMesh(collarMesh, 'Vertical Neck Collar Cuff (24.8–28.0 cm)');
+  shellGroup.add(collarMesh);
 
   return {
     shellGroup,
-    sleeveMeshes: [baseMesh, bodyMesh, shoulderMesh, collarMesh],
+    sleeveMeshes: [baseMesh, bodyMesh, collarMesh],
     evaDisc
   };
 }
 
 /**
  * Builds a single Metal Swivel Lobster Clasp (1.5 cm inner eye width) positioned so
- * its hook latch sits at (0, 0, 0) and its strap-eye bar sits at (0, +2.05, 0).
+ * its hook latch sits centered at (0, 0, 0) and its strap-eye bar sits at (0, +2.02, 0).
  */
 function buildSwivelClasp(metalMat) {
   const clasp = new THREE.Group();
 
-  // Bottom hook C-loop latching onto D-ring
+  // Bottom C-hook latching directly onto molded Silicone Side Ear Loop
   const hookCurve = new THREE.CatmullRomCurve3([
     new THREE.Vector3(0, 0.72, 0.14),
     new THREE.Vector3(0, 0.42, 0.42),
@@ -788,21 +985,17 @@ function buildSwivelClasp(metalMat) {
     new THREE.Vector3(0, 0.48, -0.32),
     new THREE.Vector3(0, 0.78, -0.04)
   ]);
-  const hookMesh = new THREE.Mesh(new THREE.TubeGeometry(hookCurve, 24, 0.12, 10, false), metalMat);
-  clasp.add(hookMesh);
+  clasp.add(new THREE.Mesh(new THREE.TubeGeometry(hookCurve, 24, 0.12, 10, false), metalMat));
 
-  // Spring thumb trigger lever
   const trigger = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.34, 0.24), metalMat);
   trigger.position.set(0, 0.56, 0.48);
   trigger.rotation.x = -0.35;
   clasp.add(trigger);
 
-  // Swivel barrel collar
   const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.48, 16), metalMat);
   barrel.position.set(0, 1.02, 0);
   clasp.add(barrel);
 
-  // Rectangular 1.5 cm inner width strap loop eye (oriented along Z so strap attaches cleanly)
   const loopProfile = new THREE.CatmullRomCurve3([
     new THREE.Vector3(0, 1.24, -0.82),
     new THREE.Vector3(0, 1.98, -0.82),
@@ -811,155 +1004,241 @@ function buildSwivelClasp(metalMat) {
     new THREE.Vector3(0, 1.24, 0.82),
     new THREE.Vector3(0, 1.24, -0.82)
   ]);
-  const eyeMesh = new THREE.Mesh(new THREE.TubeGeometry(loopProfile, 28, 0.11, 10, false), metalMat);
-  clasp.add(eyeMesh);
+  clasp.add(new THREE.Mesh(new THREE.TubeGeometry(loopProfile, 28, 0.11, 10, false), metalMat));
 
   return clasp;
 }
 
 /**
- * Builds Zone 4 Hanger System:
- * - Collar Anchor Ring (y = 25.4–26.2 cm)
- * - Drawstring Paracord + 2-Hole Cord Lock + Pokemon Cord Ends (y = 26.8 cm)
- * - 2 Vertical Load-Bearing Strap Tabs (y = 26.2 down to 20.5 cm on -X & +X)
- * - 2 Metal D-Rings (1.5 cm inner width, 3mm wire)
+ * Builds the Revised Neck Collar Hanger System (NO vertical webbing, NO metal D-rings):
+ * 1. Wide-Mouth Matte-Black Silicone Tumbler Neck Ring (y = 26.78 - 27.63 cm) with 2 molded Side Ear Loops (-X & +X)
+ * 2. 4 prominent Polycherry yarn tacking stitch bundles anchoring the Silicone Ring into the crochet collar
+ * 3. Visibly Woven-In Paracord Drawstring (y = 25.80 cm) passing IN and OUT through 14 dark eyelets & raised crochet stitch bridges,
+ *    exiting rear (-Z) through a 2-hole spring cord lock & character cord-end beads.
  */
 function buildHangerSystem(characterId, palette, texLib) {
   const group = new THREE.Group();
   group.name = `${characterId}-hanger-system`;
 
   const paracordTex = createTwistedParacordTextures(palette.strapColors);
-  paracordTex.map.repeat.set(9, 1);
-  paracordTex.bumpMap.repeat.set(9, 1);
+  paracordTex.map.repeat.set(11, 1);
+  paracordTex.bumpMap.repeat.set(11, 1);
 
   const cordMat = new THREE.MeshPhysicalMaterial({
     map: paracordTex.map,
     bumpMap: paracordTex.bumpMap,
     bumpScale: 0.12,
-    roughness: 0.65,
+    roughness: 0.62,
     metalness: 0.04,
-    sheen: 0.2
+    sheen: 0.22
   });
-  cordMat.userData.originalEmissive = new THREE.Color(0x000000);
 
-  // 1. Reinforced Collar Anchor Ring (y = 25.45 to 26.15 cm)
-  const anchorMat = createYarnMaterial(palette.anchorDark || palette.base, texLib, 5, 0.5);
-  const anchorRing = new THREE.Mesh(new THREE.TorusGeometry(3.38, 0.22, 12, 48), anchorMat);
-  anchorRing.rotation.x = Math.PI / 2;
-  anchorRing.position.y = 25.8;
-  group.add(anchorRing);
+  // --- A. Wide-Mouth Matte-Black Silicone Neck Ring (y = 26.78 - 27.63 cm, ~0.85 cm tall, ~0.38 cm wall) ---
+  const siliconeMat = new THREE.MeshPhysicalMaterial({
+    color: '#191c22',
+    roughness: 0.66,
+    metalness: 0.04,
+    clearcoat: 0.08,
+    clearcoatRoughness: 0.72
+  });
 
-  // 2. Drawstring Channel Paracord (y = 26.8 cm) exiting at BACK (-Z) so front character face stays 100% clear
-  const drawPts = [];
-  const startAngle = Math.PI + 0.22; // exit right of -Z
-  const endAngle = Math.PI * 3 - 0.22; // wrap full loop back to left of -Z
-  for (let i = 0; i <= 32; i++) {
-    const a = startAngle + (i / 32) * (endAngle - startAngle);
-    drawPts.push(new THREE.Vector3(Math.sin(a) * 3.44, 26.8, Math.cos(a) * 3.44));
+  const ringProfile = [
+    new THREE.Vector2(3.18, 26.82),
+    new THREE.Vector2(3.26, 26.76),
+    new THREE.Vector2(3.52, 26.76),
+    new THREE.Vector2(3.58, 26.86),
+    new THREE.Vector2(3.58, 27.53),
+    new THREE.Vector2(3.52, 27.63),
+    new THREE.Vector2(3.26, 27.63),
+    new THREE.Vector2(3.18, 27.57),
+    new THREE.Vector2(3.18, 26.82)
+  ];
+  const siliconeRingGeom = new THREE.LatheGeometry(ringProfile, 64);
+  const siliconeRing = new THREE.Mesh(siliconeRingGeom, siliconeMat);
+  siliconeRing.name = 'silicone-neck-ring';
+  group.add(siliconeRing);
+
+  // Subtle molded relief ridges along top/bottom rim of Silicone Ring
+  for (const rimY of [26.85, 27.54]) {
+    const rimBead = new THREE.Mesh(new THREE.TorusGeometry(3.56, 0.045, 8, 64), siliconeMat);
+    rimBead.rotation.x = Math.PI / 2;
+    rimBead.position.y = rimY;
+    group.add(rimBead);
   }
-  const drawCurve = new THREE.CatmullRomCurve3(drawPts);
-  const drawMesh = new THREE.Mesh(new THREE.TubeGeometry(drawCurve, 44, 0.19, 10, false), cordMat);
-  group.add(drawMesh);
 
-  // Two hanging drawstring tails through a 2-hole spring cord lock at back collar (-Z)
-  const lockMat = new THREE.MeshStandardMaterial({ color: '#1b1f24', roughness: 0.42, metalness: 0.12 });
-  lockMat.userData.originalEmissive = new THREE.Color(0x000000);
+  // 2 Molded Silicone Side Ear Loops (-X & +X) integrated into the ring
+  const earMountPoints = [];
+  for (const side of [-1, 1]) {
+    // Sturdy molded silicone shoulder gusset fusing ear into ring wall
+    const gusset = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.88, 1.05), siliconeMat);
+    gusset.position.set(side * 3.55, 27.20, 0);
+    group.add(gusset);
+
+    // Molded rounded silicone ear loop (lubang kuping silikon)
+    const earPts = [
+      new THREE.Vector3(side * 3.55, 27.56, 0),
+      new THREE.Vector3(side * 4.02, 27.64, 0),
+      new THREE.Vector3(side * 4.38, 27.46, 0),
+      new THREE.Vector3(side * 4.44, 27.20, 0),
+      new THREE.Vector3(side * 4.38, 26.94, 0),
+      new THREE.Vector3(side * 4.02, 26.76, 0),
+      new THREE.Vector3(side * 3.55, 26.84, 0)
+    ];
+    const earCurve = new THREE.CatmullRomCurve3(earPts);
+    const earMesh = new THREE.Mesh(new THREE.TubeGeometry(earCurve, 24, 0.19, 12, false), siliconeMat);
+    group.add(earMesh);
+
+    // Clasp hooks directly onto outer bar of the silicone ear loop at (±4.38, 27.20, 0)
+    earMountPoints.push(new THREE.Vector3(side * 4.38, 27.20, 0));
+  }
+
+  // 4 Visible Polycherry Yarn Tacking Stitch Loops (Front +Z, Back -Z, Left -X, Right +X)
+  // Physically wrapping over lower Silicone Ring rim and locking into upper crochet collar (y = 26.42 - 27.32)
+  const tackMat = createYarnMaterial(palette.tackColor || palette.base, texLib, 2, 2);
+  const tackAccentMat = createYarnMaterial(palette.anchorDark || palette.cuffColor, texLib, 2, 2);
+  const cardinals = [0, Math.PI * 0.5, Math.PI, Math.PI * 1.5]; // +Z, +X, -Z, -X
+
+  for (const baseAng of cardinals) {
+    // 3 tight whip-stitch loops per cardinal tack point so crocheter sees exact binding path
+    for (const dAng of [-0.075, 0, 0.075]) {
+      const a = baseAng + dAng;
+      const sx = Math.sin(a);
+      const sz = Math.cos(a);
+      const loopCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(sx * 3.22, 26.42, sz * 3.22), // anchored into crochet collar row
+        new THREE.Vector3(sx * 3.63, 26.72, sz * 3.63), // wraps outside bottom edge of Silicone Ring
+        new THREE.Vector3(sx * 3.64, 27.22, sz * 3.64), // hugs mid Silicone Ring wall
+        new THREE.Vector3(sx * 3.42, 27.68, sz * 3.42), // passes over upper rim
+        new THREE.Vector3(sx * 3.20, 27.76, sz * 3.20)  // locks into upper crochet cuff
+      ]);
+      const loopMesh = new THREE.Mesh(
+        new THREE.TubeGeometry(loopCurve, 18, 0.085, 8, false),
+        dAng === 0 ? tackAccentMat : tackMat
+      );
+      group.add(loopMesh);
+    }
+  }
+
+  // --- B. Visibly Connected Woven-In Drawstring (y = 25.80 cm) ---
+  const yDraw = TUMBLER_SPECS.drawstringY;
+  const numEyelets = 14;
+  const stepAng = (Math.PI * 2) / numEyelets;
+  // Offset angles so eyelets 0 and 13 cleanly straddle Rear (-Z, theta = PI) symmetrically
+  const startTheta = Math.PI + stepAng * 0.5;
+
+  const eyeletHoleMat = new THREE.MeshStandardMaterial({ color: '#0d1014', roughness: 0.9 });
+  const eyeletRimMat = createYarnMaterial(palette.anchorDark || palette.base, texLib, 2, 2);
+  const bridgeMat = createYarnMaterial(palette.body, texLib, 3, 1.5);
+
+  for (let k = 0; k < numEyelets; k++) {
+    const a = startTheta + k * stepAng;
+    const nx = Math.sin(a);
+    const nz = Math.cos(a);
+
+    // Recessed dark eyelet cavity + proud crochet grommet ring at r = 3.21 cm so all 14 openings read clearly
+    const eyeletHolder = new THREE.Group();
+    eyeletHolder.position.set(nx * 3.21, yDraw, nz * 3.21);
+    eyeletHolder.rotation.y = a;
+
+    const cavity = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.16, 14), eyeletHoleMat);
+    cavity.rotation.x = Math.PI / 2;
+    eyeletHolder.add(cavity);
+
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(0.20, 0.072, 10, 18), eyeletRimMat);
+    rim.position.z = 0.04;
+    eyeletHolder.add(rim);
+
+    group.add(eyeletHolder);
+
+    // On every ODD span between eyelets (except the open rear gap k=13 -> k=0), add a raised
+    // crochet stitch bridge loop that clearly arches OVER the tucked paracord!
+    if (k < numEyelets - 1 && k % 2 === 1) {
+      const a0 = a + 0.03;
+      const a1 = a + stepAng - 0.03;
+      const am = (a0 + a1) * 0.5;
+      const bridgeCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(Math.sin(a0) * 3.21, yDraw, Math.cos(a0) * 3.21),
+        new THREE.Vector3(Math.sin(am) * 3.46, yDraw + 0.04, Math.cos(am) * 3.46),
+        new THREE.Vector3(Math.sin(a1) * 3.21, yDraw, Math.cos(a1) * 3.21)
+      ]);
+      const bridge = new THREE.Mesh(new THREE.TubeGeometry(bridgeCurve, 10, 0.20, 8, false), bridgeMat);
+      group.add(bridge);
+    }
+  }
+
+  // Continuous woven paracord passing OUT on even spans & IN behind stitch bridges on odd spans
+  // Starts cleanly at Rear-Left eyelet (k=0, a = PI + stepAng/2) -> wraps around front -> exits Rear-Right eyelet (k=13, a = 3PI - stepAng/2)
+  const weavePts = [];
+  const totalSamples = 140;
+  for (let i = 0; i <= totalSamples; i++) {
+    const f = i / totalSamples;
+    const spanF = f * (numEyelets - 1); // 0 to 13 across 13 connected spans (skipping rear exit gap)
+    const spanIdx = Math.min(numEyelets - 2, Math.floor(spanF));
+    const localT = spanF - spanIdx;
+    const theta = startTheta + spanF * stepAng;
+
+    // Passes OUT (r = 3.43) on even spans, IN (r = 3.02) behind stitch bridges on odd spans
+    const isOuterSpan = spanIdx % 2 === 0;
+    const archFactor = Math.sin(localT * Math.PI); // 0 at eyelet center, 1 at mid-span
+    const r = isOuterSpan
+      ? 3.18 + 0.25 * archFactor
+      : 3.18 - 0.16 * archFactor;
+
+    weavePts.push(new THREE.Vector3(Math.sin(theta) * r, yDraw, Math.cos(theta) * r));
+  }
+  const weaveCurve = new THREE.CatmullRomCurve3(weavePts);
+  const weaveMesh = new THREE.Mesh(new THREE.TubeGeometry(weaveCurve, 150, 0.18, 10, false), cordMat);
+  group.add(weaveMesh);
+
+  // Two paracord tails emerging cleanly out of rear eyelets (theta = PI ± stepAng/2) into 2-hole Spring Cord Lock
+  const lockMat = new THREE.MeshStandardMaterial({ color: '#1b1e24', roughness: 0.44, metalness: 0.12 });
   const cordLock = new THREE.Group();
-  cordLock.position.set(0, 26.25, -4.18);
-  cordLock.rotation.x = 0.26;
-  const lockBody = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.68, 1.35, 18), lockMat);
+  cordLock.position.set(0, 24.95, -4.05);
+  cordLock.rotation.x = 0.22;
+  const lockBody = new THREE.Mesh(new THREE.CylinderGeometry(0.60, 0.66, 1.32, 18), lockMat);
   lockBody.scale.set(1.35, 1, 0.85);
   cordLock.add(lockBody);
-  const lockPlunger = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.55, 16), lockMat);
-  lockPlunger.position.y = 0.82;
+  const lockPlunger = new THREE.Mesh(new THREE.CylinderGeometry(0.40, 0.40, 0.52, 16), lockMat);
+  lockPlunger.position.y = 0.80;
   cordLock.add(lockPlunger);
   group.add(cordLock);
 
   const beadMat = createYarnMaterial(palette.cordEndColor, texLib, 2, 2);
+  const exitOffsetAng = stepAng * 0.5;
   for (const side of [-1, 1]) {
+    const exitAng = Math.PI - side * exitOffsetAng; // left/right adjacent to -Z
     const tailCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(side * 0.72, 26.8, -3.40),
-      new THREE.Vector3(side * 0.32, 26.45, -4.15),
-      new THREE.Vector3(side * 0.34, 25.05, -4.48),
-      new THREE.Vector3(side * 0.44, 23.75, -4.66)
+      new THREE.Vector3(Math.sin(exitAng) * 3.16, yDraw, Math.cos(exitAng) * 3.16), // inside eyelet
+      new THREE.Vector3(Math.sin(exitAng) * 3.55, yDraw - 0.18, Math.cos(exitAng) * 3.55),
+      new THREE.Vector3(side * 0.30, 25.15, -4.02), // passes through cord lock
+      new THREE.Vector3(side * 0.34, 24.05, -4.32),
+      new THREE.Vector3(side * 0.42, 22.95, -4.48)
     ]);
-    const tailMesh = new THREE.Mesh(new THREE.TubeGeometry(tailCurve, 20, 0.18, 10, false), cordMat);
-    group.add(tailMesh);
+    group.add(new THREE.Mesh(new THREE.TubeGeometry(tailCurve, 22, 0.175, 10, false), cordMat));
 
-    const endBead = new THREE.Mesh(new THREE.SphereGeometry(0.44, 16, 14), beadMat);
+    const endBead = new THREE.Mesh(new THREE.SphereGeometry(0.42, 16, 14), beadMat);
     endBead.scale.set(0.9, 1.15, 0.9);
-    endBead.position.set(side * 0.44, 23.55, -4.68);
+    endBead.position.set(side * 0.42, 22.76, -4.50);
     group.add(endBead);
   }
 
-  // 3. 2 Vertical Load-Bearing Strap Tabs (y = 26.2 down to 20.5 cm on -X & +X) + Metal D-Rings
-  const tabMat = createYarnMaterial(palette.anchorDark || palette.base, texLib, 1.5, 3.5);
-  const stitchXMat = createYarnMaterial(palette.cuffColor, texLib, 1, 1);
-  const dRingMat = createMetalMaterial('#96a2af', 0.20);
-  const dRingMountPoints = [];
-
-  for (const side of [-1, 1]) {
-    const tabCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(side * 3.45, 26.15, 0),
-      new THREE.Vector3(side * 3.68, 24.6, 0),
-      new THREE.Vector3(side * 4.02, 22.8, 0),
-      new THREE.Vector3(side * 4.42, 20.55, 0)
-    ]);
-    const tabGeom = buildFlatRibbonAlongCurve(tabCurve, 1.85, 0.42, 24);
-    const tabMesh = new THREE.Mesh(tabGeom, tabMat);
-    group.add(tabMesh);
-
-    // Clean flush X-box reinforcement cross-stitching at top (y=25.4) & bottom (y=21.2) of tab
-    for (const [ty, tx] of [[25.4, 3.63], [21.2, 4.44]]) {
-      for (const diag of [-1, 1]) {
-        const xStitch = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 1.25, 4, 8), stitchXMat);
-        xStitch.position.set(side * tx, ty, 0);
-        xStitch.rotation.x = Math.PI / 2 + diag * 0.42;
-        group.add(xStitch);
-      }
-    }
-
-    // Folded keeper loop holding the Metal D-Ring at y = 24.45 cm
-    const keeper = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 1.75, 16), tabMat);
-    keeper.rotation.x = Math.PI / 2;
-    keeper.position.set(side * 3.92, 24.45, 0);
-    group.add(keeper);
-
-    // Metal D-Ring (1.5 cm inner width, 3mm wire = 0.15 cm radius)
-    const wHalf = 0.75 + 0.15; // 1.5 cm inner width + wire radius
-    const dCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(side * 3.92, 24.45, -wHalf),
-      new THREE.Vector3(side * 3.92, 24.45, wHalf),
-      new THREE.Vector3(side * 4.18, 25.05, wHalf * 0.92),
-      new THREE.Vector3(side * 4.30, 25.60, 0),
-      new THREE.Vector3(side * 4.18, 25.05, -wHalf * 0.92),
-      new THREE.Vector3(side * 3.92, 24.45, -wHalf)
-    ]);
-    const dRing = new THREE.Mesh(new THREE.TubeGeometry(dCurve, 32, 0.15, 12, true), dRingMat);
-    group.add(dRing);
-
-    dRingMountPoints.push(new THREE.Vector3(side * 4.28, 25.62, 0));
-  }
-
-  tagZone(group, 'zone-4', 'Drawstring Collar, Load Tabs & Metal D-Rings (25.5–28.0 cm)');
-  return { group, dRingMountPoints };
+  configureShadowMesh(group, 'Silicone Neck Ring & Woven Eyelet Drawstring');
+  return { group, earMountPoints };
 }
 
 /**
- * Sweeps a rounded-rectangle cross section along a CatmullRomCurve3 using stable Bishop/parallel-transport frames.
+ * Sweeps a rounded-rectangle cross section along a CatmullRomCurve3 using stable parallel-transport frames.
  */
 function buildFlatRibbonAlongCurve(curve, width = 2.0, thickness = 0.5, segments = 120) {
   const frames = curve.computeFrenetFrames(segments, false);
   const pts = curve.getSpacedPoints(segments);
 
-  // Build rounded-rectangle cross-section in local (N, B) coordinates
   const ringPts = 14;
   const localProfile = [];
   const hw = width * 0.5;
   const ht = thickness * 0.5;
   for (let k = 0; k < ringPts; k++) {
     const a = (k / ringPts) * Math.PI * 2;
-    // Superellipse exponent 0.55 yields a clean rounded flat strap cross section
     const cx = Math.sign(Math.cos(a)) * Math.pow(Math.abs(Math.cos(a)), 0.55) * ht;
     const cz = Math.sign(Math.sin(a)) * Math.pow(Math.abs(Math.sin(a)), 0.55) * hw;
     localProfile.push([cx, cz]);
@@ -970,7 +1249,6 @@ function buildFlatRibbonAlongCurve(curve, width = 2.0, thickness = 0.5, segments
   const indices = [];
   const len = curve.getLength();
 
-  // Compute rotation-minimizing frame relative to global +Z/normal so ribbon stays flat and twist-free
   let prevTangent = pts[1].clone().sub(pts[0]).normalize();
   let normal = new THREE.Vector3(0, 0, 1);
   if (Math.abs(prevTangent.dot(normal)) > 0.9) {
@@ -1023,9 +1301,6 @@ function buildFlatRibbonAlongCurve(curve, width = 2.0, thickness = 0.5, segments
   return geom;
 }
 
-/**
- * Calibrates a parametric CatmullRomCurve3 via binary search so curve.getLength() equals targetCm.
- */
 function calibrateCurveToLength(buildCurveFn, minParam, maxParam, targetCm) {
   let lo = minParam;
   let hi = maxParam;
@@ -1043,19 +1318,18 @@ function calibrateCurveToLength(buildCurveFn, minParam, maxParam, targetCm) {
 }
 
 /**
- * Builds Zone 6 Interchangeable Straps:
- *  - Short Strap (30 cm twisted 3-color paracord arch + cuffs + swivel clasps)
+ * Builds Interchangeable Straps hooking DIRECTLY onto the 2 molded Silicone Side Ear Loops:
+ *  - Short Strap (30 cm twisted 3-color paracord arch + crochet cuffs + swivel clasps)
  *  - Long Strap (100 cm flat Thermal Stitch crochet sling + paracord tips + swivel clasps)
  */
-function buildInterchangeableStraps(characterId, palette, texLib, mountPoints) {
-  const [leftMount, rightMount] = mountPoints;
-  const metalMat = createMetalMaterial('#9ba7b4', 0.20);
+function buildInterchangeableStraps(characterId, palette, texLib, earMountPoints) {
+  const [leftMount, rightMount] = earMountPoints;
+  const metalMat = createMetalMaterial('#a4aeb8', 0.20);
 
-  // Clasp eye endpoints (~2.0 cm above D-ring hook)
   const leftEye = new THREE.Vector3(leftMount.x, leftMount.y + 1.98, leftMount.z);
   const rightEye = new THREE.Vector3(rightMount.x, rightMount.y + 1.98, rightMount.z);
 
-  // --- A. SHORT STRAP (30 cm, Gambar 2 style) ---
+  // --- A. SHORT STRAP (30 cm) ---
   const shortGroup = new THREE.Group();
   shortGroup.name = `${characterId}-strap-short`;
 
@@ -1070,8 +1344,8 @@ function buildInterchangeableStraps(characterId, palette, texLib, mountPoints) {
         new THREE.Vector3(rightEye.x + 0.55, rightEye.y + lift * 0.48, 0),
         rightEye.clone()
       ]),
-    7.0,
-    18.0,
+    6.5,
+    17.5,
     TUMBLER_SPECS.shortStrapLengthCm
   );
 
@@ -1086,12 +1360,9 @@ function buildInterchangeableStraps(characterId, palette, texLib, mountPoints) {
     metalness: 0.04,
     sheen: 0.25
   });
-  shortRopeMat.userData.originalEmissive = new THREE.Color(0x000000);
 
-  const shortTube = new THREE.Mesh(new THREE.TubeGeometry(shortCurve, 96, 0.54, 14, false), shortRopeMat);
-  shortGroup.add(shortTube);
+  shortGroup.add(new THREE.Mesh(new THREE.TubeGeometry(shortCurve, 96, 0.52, 14, false), shortRopeMat));
 
-  // Wrapped crochet collar sleeves near both clasps (like Gambar 2)
   const cuffMat = createYarnMaterial(palette.cuffColor, texLib, 2.5, 2);
   const addEndCuff = (tStart, tEnd) => {
     const subPts = [];
@@ -1099,13 +1370,11 @@ function buildInterchangeableStraps(characterId, palette, texLib, mountPoints) {
       subPts.push(shortCurve.getPointAt(tStart + (s / 12) * (tEnd - tStart)));
     }
     const subCurve = new THREE.CatmullRomCurve3(subPts);
-    const cuffMesh = new THREE.Mesh(new THREE.TubeGeometry(subCurve, 16, 0.68, 14, false), cuffMat);
-    shortGroup.add(cuffMesh);
+    shortGroup.add(new THREE.Mesh(new THREE.TubeGeometry(subCurve, 16, 0.66, 14, false), cuffMat));
   };
   addEndCuff(0.0, 0.115);
   addEndCuff(0.885, 1.0);
 
-  // Swivel clasps for short strap
   for (const mp of [leftMount, rightMount]) {
     const clasp = buildSwivelClasp(metalMat);
     clasp.position.copy(mp);
@@ -1113,29 +1382,28 @@ function buildInterchangeableStraps(characterId, palette, texLib, mountPoints) {
   }
 
   shortGroup.userData.measuredLengthCm = Number(shortCurve.getLength().toFixed(1));
-  tagZone(shortGroup, 'zone-6', `Short Strap (${shortGroup.userData.measuredLengthCm} cm Twisted Paracord)`);
+  configureShadowMesh(shortGroup, `Short Strap (${shortGroup.userData.measuredLengthCm} cm)`);
 
   // --- B. LONG STRAP (100 cm Crossbody Thermal Stitch Sling) ---
   const longGroup = new THREE.Group();
   longGroup.name = `${characterId}-strap-long`;
 
-  // Clasp points tilted gently outward/forward for the 100 cm sling
-  const leftSlingEye = new THREE.Vector3(leftMount.x - 0.52, leftMount.y + 1.72, 0.88);
-  const rightSlingEye = new THREE.Vector3(rightMount.x + 0.52, rightMount.y + 1.72, 0.88);
+  const leftSlingEye = new THREE.Vector3(leftMount.x - 0.55, leftMount.y + 1.70, 0.85);
+  const rightSlingEye = new THREE.Vector3(rightMount.x + 0.55, rightMount.y + 1.70, 0.85);
 
   const longCurve = calibrateCurveToLength(
     (k) =>
       new THREE.CatmullRomCurve3([
         leftSlingEye.clone(),
-        new THREE.Vector3(-6.4 * k, 28.4, 2.0 * k),
-        new THREE.Vector3(-12.2 * k, 18.0, 5.2 * k),
+        new THREE.Vector3(-6.6 * k, 29.8, 2.0 * k),
+        new THREE.Vector3(-12.2 * k, 18.5, 5.2 * k),
         new THREE.Vector3(-13.8 * k, 2.8, 10.6 * k),
         new THREE.Vector3(-7.6 * k, 0.72, 15.2 * k),
         new THREE.Vector3(0, 0.64, 16.5 * k),
         new THREE.Vector3(7.6 * k, 0.72, 15.0 * k),
         new THREE.Vector3(13.8 * k, 2.8, 10.2 * k),
-        new THREE.Vector3(12.0 * k, 17.6, 4.8 * k),
-        new THREE.Vector3(6.4 * k, 28.2, 1.8 * k),
+        new THREE.Vector3(12.0 * k, 18.2, 4.8 * k),
+        new THREE.Vector3(6.6 * k, 29.6, 1.8 * k),
         rightSlingEye.clone()
       ]),
     0.7,
@@ -1156,17 +1424,12 @@ function buildInterchangeableStraps(characterId, palette, texLib, mountPoints) {
     sheen: 0.35,
     sheenColor: new THREE.Color(palette.body).lerp(new THREE.Color('#ffffff'), 0.25)
   });
-  longStrapMat.userData.originalEmissive = new THREE.Color(0x000000);
 
-  const longRibbonGeom = buildFlatRibbonAlongCurve(longCurve, 2.0, 0.52, 180);
-  const longRibbonMesh = new THREE.Mesh(longRibbonGeom, longStrapMat);
-  longGroup.add(longRibbonMesh);
+  longGroup.add(new THREE.Mesh(buildFlatRibbonAlongCurve(longCurve, 2.0, 0.52, 180), longStrapMat));
 
-  // Visible inner paracord reinforcement tips + wrapped cuffs near clasps
   const tipCordTex = createTwistedParacordTextures(palette.strapColors);
   tipCordTex.map.repeat.set(4, 1);
   const tipCordMat = new THREE.MeshStandardMaterial({ map: tipCordTex.map, roughness: 0.65 });
-  tipCordMat.userData.originalEmissive = new THREE.Color(0x000000);
 
   for (const [mp, eye, side] of [
     [leftMount, leftSlingEye, -1],
@@ -1174,11 +1437,10 @@ function buildInterchangeableStraps(characterId, palette, texLib, mountPoints) {
   ]) {
     const clasp = buildSwivelClasp(metalMat);
     clasp.position.copy(mp);
-    clasp.rotation.z = side * 0.25;
-    clasp.rotation.x = 0.42;
+    clasp.rotation.z = side * 0.26;
+    clasp.rotation.x = 0.40;
     longGroup.add(clasp);
 
-    // Wrapped sleeve cuff & visible inner paracord tip
     const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.56, 2.4, 14), cuffMat);
     cuff.position.copy(eye).add(new THREE.Vector3(side * 0.55, 0.4, 0.55));
     cuff.rotation.z = side * 0.65;
@@ -1193,14 +1455,11 @@ function buildInterchangeableStraps(characterId, palette, texLib, mountPoints) {
   }
 
   longGroup.userData.measuredLengthCm = Number(longCurve.getLength().toFixed(1));
-  tagZone(longGroup, 'zone-6', `Long Crossbody Strap (${longGroup.userData.measuredLengthCm} cm Thermal Stitch)`);
+  configureShadowMesh(longGroup, `Long Crossbody Strap (${longGroup.userData.measuredLengthCm} cm)`);
 
   return { shortGroup, longGroup };
 }
 
-/**
- * Helper to create a curved 3D crochet leaf blade / wing frame using beveled ExtrudeGeometry.
- */
 function buildLeafBladeMesh(lengthCm, widthCm, thicknessCm, mat) {
   const shape = new THREE.Shape();
   shape.moveTo(0, 0);
@@ -1220,7 +1479,8 @@ function buildLeafBladeMesh(lengthCm, widthCm, thicknessCm, mat) {
 }
 
 /**
- * Builds Sceptile-specific Face (Zone 3) and Back/Side 3D Crochet Ornaments (Zone 5).
+ * Builds Sceptile-specific Fierce Face (y = 21.3 - 25.4 cm) matching ref/sceptile/pov/front_sceptile.png,
+ * plus 6 Yellow Back Seeds, Multi-Frond Leaf Tail & Forearm Leaf Blades.
  */
 function buildSceptileDetails(palette, texLib) {
   const faceGroup = new THREE.Group();
@@ -1231,101 +1491,132 @@ function buildSceptileDetails(palette, texLib) {
   const darkGreenMat = createYarnMaterial(palette.leafDark, texLib, 3, 3);
   const midGreenMat = createYarnMaterial(palette.leafMid, texLib, 3, 3);
   const blackMat = new THREE.MeshStandardMaterial({ color: '#141916', roughness: 0.55 });
-  blackMat.userData.originalEmissive = new THREE.Color(0x000000);
   const whiteMat = new THREE.MeshStandardMaterial({ color: '#f7f9f7', roughness: 0.35 });
-  whiteMat.userData.originalEmissive = new THREE.Color(0x000000);
 
-  // --- ZONE 5: Sharp Sceptile Eyes, Brow Ridge, Lower Jaw Trim & Pointed Crests (y = 21.6–27.8) ---
-  // Sculpted subtle front snout bridge & coral lower-jaw accent
-  const snoutBridge = new THREE.Mesh(new THREE.SphereGeometry(1.18, 18, 14), midGreenMat);
-  snoutBridge.scale.set(1.12, 0.72, 0.62);
-  snoutBridge.position.set(0, 22.05, 3.72);
-  faceGroup.add(snoutBridge);
+  // Sleek tapered angular reptilian snout ridge centered cleanly at front +Z (y = 21.8 - 22.8 cm)
+  const snoutGroup = new THREE.Group();
+  const snoutR = getCaseOuterRadiusAtY(22.15) - 0.12;
+  snoutGroup.position.set(0, 22.12, snoutR);
+  snoutGroup.rotation.x = 0.22;
 
+  const snoutDome = new THREE.Mesh(new THREE.SphereGeometry(1.12, 20, 14), midGreenMat);
+  snoutDome.scale.set(1.12, 0.62, 0.85);
+  snoutGroup.add(snoutDome);
+
+  // Subtle pointed snout beak V-tip overhanging front center (like front_sceptile.png)
+  const beakTip = new THREE.Mesh(new THREE.ConeGeometry(0.66, 1.05, 12), midGreenMat);
+  beakTip.scale.set(1.15, 0.78, 0.68);
+  beakTip.position.set(0, -0.22, 0.58);
+  beakTip.rotation.x = Math.PI * 0.82;
+  snoutGroup.add(beakTip);
+
+  for (const side of [-1, 1]) {
+    const nostril = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), blackMat);
+    nostril.position.set(side * 0.28, -0.02, 0.86);
+    snoutGroup.add(nostril);
+  }
+  faceGroup.add(snoutGroup);
+
+  // Confident upward-smirking Crimson/Coral lower jaw grin (corners sweep UP toward cheeks)
   const jawCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-1.12, 21.75, 3.82),
-    new THREE.Vector3(0, 21.38, 4.34),
-    new THREE.Vector3(1.12, 21.75, 3.82)
+    new THREE.Vector3(-1.38, 22.02, 3.88),
+    new THREE.Vector3(-0.78, 21.48, 4.46),
+    new THREE.Vector3(0.0, 21.28, 4.66),
+    new THREE.Vector3(0.78, 21.48, 4.46),
+    new THREE.Vector3(1.38, 22.02, 3.88)
   ]);
-  const lowerJaw = new THREE.Mesh(new THREE.TubeGeometry(jawCurve, 18, 0.17, 10, false), trimRedMat);
-  faceGroup.add(lowerJaw);
+  faceGroup.add(new THREE.Mesh(new THREE.TubeGeometry(jawCurve, 22, 0.16, 10, false), trimRedMat));
+
+  // Subtle dark open-mouth inner grin crevice tucked above lower jaw rim
+  const grinLine = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(-1.20, 22.02, 3.96),
+    new THREE.Vector3(0.0, 21.52, 4.60),
+    new THREE.Vector3(1.20, 22.02, 3.96)
+  ]);
+  faceGroup.add(new THREE.Mesh(new THREE.TubeGeometry(grinLine, 18, 0.085, 8, false), blackMat));
+
+  // FIERCE "\ /" V-SLANTED EYES & HOODED BROW RIDGES (y = 22.95 cm) matching front_sceptile.png
+  const eyeY = 22.95;
+  const eyeSurfaceR = getCaseOuterRadiusAtY(eyeY) - 0.16;
 
   for (const side of [-1, 1]) {
     const eyePivot = new THREE.Group();
-    const angle = side * 0.54; // ~31 deg from front +Z
-    const rSurface = 3.82;
-    eyePivot.position.set(Math.sin(angle) * rSurface, 22.95, Math.cos(angle) * rSurface);
+    const angle = side * 0.56;
+    eyePivot.position.set(Math.sin(angle) * eyeSurfaceR, eyeY, Math.cos(angle) * eyeSurfaceR);
     eyePivot.rotation.y = angle;
-    eyePivot.rotation.x = -0.18;
+    eyePivot.rotation.x = -0.26; // Matches convex dome surface pitch cleanly
 
-    // Crimson lower eye-lid trim
+    // Single tilt group guaranteeing "\ /" fierce slope:
+    // side = -1 (left): rotZ = -0.32 -> inner (+x) drops DOWN toward nose bridge, outer (-x) lifts UP!
+    // side = +1 (right): rotZ = +0.32 -> inner (-x) drops DOWN toward nose bridge, outer (+x) lifts UP!
+    const tiltGroup = new THREE.Group();
+    tiltGroup.rotation.z = side * 0.32;
+
+    // Asymmetric sharp sclera: flat hooded upper rim, sharper outer wing (side * +1.05), lower inner point (side * -0.90)
+    const innerX = -side * 0.90;
+    const outerX = side * 1.06;
+
     const trimShape = new THREE.Shape();
-    trimShape.moveTo(-1.02, 0.26);
-    trimShape.quadraticCurveTo(0, -0.84, 1.02, 0.16);
-    trimShape.quadraticCurveTo(0, -0.32, -1.02, 0.26);
+    trimShape.moveTo(innerX, 0.18);
+    trimShape.quadraticCurveTo(0, -0.78, outerX, 0.22);
+    trimShape.quadraticCurveTo(0, -0.36, innerX, 0.18);
     const trimMesh = new THREE.Mesh(
-      new THREE.ExtrudeGeometry(trimShape, { depth: 0.18, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05 }),
+      new THREE.ExtrudeGeometry(trimShape, { depth: 0.18, bevelEnabled: true, bevelSize: 0.04, bevelThickness: 0.04 }),
       trimRedMat
     );
-    trimMesh.rotation.z = side * -0.26;
-    eyePivot.add(trimMesh);
+    tiltGroup.add(trimMesh);
 
-    // Bright yellow almond eye sclera
+    // Bright yellow almond sclera with crisp straight upper eyelid hooded by brow
     const eyeShape = new THREE.Shape();
-    eyeShape.moveTo(-0.96, 0.24);
-    eyeShape.quadraticCurveTo(0.05, 0.72, 0.96, 0.15);
-    eyeShape.quadraticCurveTo(0.05, -0.58, -0.96, 0.24);
+    eyeShape.moveTo(innerX * 0.94, 0.22);
+    eyeShape.quadraticCurveTo(0, 0.36, outerX * 0.96, 0.24); // sharp fierce straight/hooded upper lid
+    eyeShape.quadraticCurveTo(0, -0.56, innerX * 0.94, 0.22); // curved lower lid
     const eyeMesh = new THREE.Mesh(
-      new THREE.ExtrudeGeometry(eyeShape, { depth: 0.20, bevelEnabled: true, bevelSize: 0.04, bevelThickness: 0.04 }),
+      new THREE.ExtrudeGeometry(eyeShape, { depth: 0.22, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03 }),
       yellowMat
     );
-    eyeMesh.position.z = 0.05;
-    eyeMesh.rotation.z = side * -0.26;
-    eyePivot.add(eyeMesh);
+    eyeMesh.position.z = 0.04;
+    tiltGroup.add(eyeMesh);
 
-    // Vertical slit pupil + white glint
-    const pupil = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.64, 0.16), blackMat);
-    pupil.position.set(side * -0.04, 0.06, 0.24);
-    pupil.rotation.z = side * -0.12;
-    eyePivot.add(pupil);
+    // Sharp vertical slit pupil + crisp white catchlight
+    const pupil = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.56, 0.14), blackMat);
+    pupil.position.set(side * -0.05, -0.02, 0.26);
+    pupil.rotation.z = side * -0.18; // keeps slit nearly vertical even under tilt
+    tiltGroup.add(pupil);
 
-    const glint = new THREE.Mesh(new THREE.SphereGeometry(0.10, 8, 8), whiteMat);
-    glint.position.set(side * 0.09, 0.24, 0.30);
-    eyePivot.add(glint);
+    const glint = new THREE.Mesh(new THREE.SphereGeometry(0.085, 8, 8), whiteMat);
+    glint.position.set(side * 0.06, 0.10, 0.31);
+    tiltGroup.add(glint);
 
-    // Angled dark-green brow ridge above eye
-    const brow = new THREE.Mesh(new THREE.CapsuleGeometry(0.16, 1.65, 6, 10), darkGreenMat);
-    brow.position.set(0, 0.60, 0.16);
-    brow.rotation.z = Math.PI / 2 + side * -0.32;
-    eyePivot.add(brow);
+    // Sculpted overhanging Dark Forest Green brow ridge rotating identically with tiltGroup ("\ /" fierce hood)
+    const browCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(innerX * 1.05, 0.34, 0.24),
+      new THREE.Vector3(0, 0.42, 0.28),
+      new THREE.Vector3(outerX * 1.12, 0.36, 0.20)
+    ]);
+    const browMesh = new THREE.Mesh(new THREE.TubeGeometry(browCurve, 16, 0.19, 10, false), darkGreenMat);
+    tiltGroup.add(browMesh);
 
+    eyePivot.add(tiltGroup);
     faceGroup.add(eyePivot);
 
-    // Pointed twin Sceptile head crests leaning slightly forward/outward at collar sides (keeps y=28-32 cap clear)
-    const crest = new THREE.Mesh(new THREE.ConeGeometry(0.68, 2.45, 14), midGreenMat);
-    crest.scale.set(0.85, 1.0, 0.68);
-    crest.position.set(side * 2.18, 26.25, 2.88);
-    crest.rotation.z = side * -0.42;
-    crest.rotation.x = 0.34;
+    // Sleek angled side brow/head crests along upper shoulder sides (y = 23.8 - 25.3 cm, clear of drawstring & ring)
+    const crest = new THREE.Mesh(new THREE.ConeGeometry(0.56, 2.05, 14), midGreenMat);
+    crest.scale.set(0.88, 1.05, 0.72);
+    crest.position.set(side * 2.76, 24.25, 2.74);
+    crest.rotation.z = side * -0.62;
+    crest.rotation.x = 0.24;
     faceGroup.add(crest);
   }
 
-  // Subtle embroidered nostrils at front snout center
-  for (const side of [-1, 1]) {
-    const nostril = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8), darkGreenMat);
-    nostril.position.set(side * 0.34, 22.12, 4.38);
-    faceGroup.add(nostril);
-  }
+  configureShadowMesh(faceGroup, 'Sceptile Fierce Front Face & Brow Relief (21.3–25.3 cm)');
 
-  tagZone(faceGroup, 'zone-5', 'Sceptile Front Face, Slanted Eyes & Brow Relief (21.5–25.5 cm)');
-
-  // --- ZONE 5: 6 Yellow Back Seeds, Layered Leaf Tail, Forearm Leaf Blades ---
-  // 1. 6 Plump Yellow Back Seeds (3 pairs at y = 18.6, 15.2, 11.8)
+  // --- Back & Side 3D Crochet Ornaments ---
+  // 1. 6 Plump Yellow Back Seeds (y = 18.8, 15.2, 11.6)
   const seedMat = createYarnMaterial(palette.seedYellow, texLib, 2.5, 2.5);
-  const seedYs = [18.5, 15.1, 11.7];
-  for (const sy of seedYs) {
+  for (const sy of [18.8, 15.2, 11.6]) {
     for (const side of [-1, 1]) {
-      const a = Math.PI + side * 0.44; // ±155 deg on back
+      const a = Math.PI + side * 0.44;
       const seedHolder = new THREE.Group();
       seedHolder.position.set(Math.sin(a) * 4.32, sy, Math.cos(a) * 4.32);
       seedHolder.rotation.y = a;
@@ -1345,7 +1636,7 @@ function buildSceptileDetails(palette, texLib) {
     }
   }
 
-  // 2. Layered Multi-Frond Leaf Tail (y = 2.0–10.5 cm, back -Z)
+  // 2. Layered Multi-Frond Leaf Tail (y = 3.6 - 10.5 cm, back -Z)
   const tailGroup = new THREE.Group();
   tailGroup.position.set(0, 3.6, -4.15);
 
@@ -1355,17 +1646,15 @@ function buildSceptileDetails(palette, texLib) {
     new THREE.Vector3(0, 1.6, -5.2),
     new THREE.Vector3(0, 2.8, -7.8)
   ]);
-  const stemRadii = [1.45, 1.15, 0.72, 0.25];
   const stemPts = stemCurve.getSpacedPoints(12);
   for (let i = 0; i < stemPts.length - 1; i++) {
     const t0 = i / (stemPts.length - 1);
     const t1 = (i + 1) / (stemPts.length - 1);
-    const r0 = THREE.MathUtils.lerp(stemRadii[0], stemRadii[3], t0);
-    const r1 = THREE.MathUtils.lerp(stemRadii[0], stemRadii[3], t1);
+    const r0 = THREE.MathUtils.lerp(1.45, 0.25, t0);
+    const r1 = THREE.MathUtils.lerp(1.45, 0.25, t1);
     const segLen = stemPts[i].distanceTo(stemPts[i + 1]);
     const segMesh = new THREE.Mesh(new THREE.CylinderGeometry(r1, r0, segLen + 0.15, 14), midGreenMat);
-    const mid = stemPts[i].clone().lerp(stemPts[i + 1], 0.5);
-    segMesh.position.copy(mid);
+    segMesh.position.copy(stemPts[i].clone().lerp(stemPts[i + 1], 0.5));
     segMesh.quaternion.setFromUnitVectors(
       new THREE.Vector3(0, 1, 0),
       stemPts[i + 1].clone().sub(stemPts[i]).normalize()
@@ -1373,14 +1662,12 @@ function buildSceptileDetails(palette, texLib) {
     tailGroup.add(segMesh);
   }
 
-  // Symmetrical upper & lower palm-leaf fronds radiating out from tail stem
   for (let row = 0; row < 5; row++) {
     const t = 0.18 + row * 0.16;
     const anchor = stemCurve.getPointAt(t);
     const frondLen = 4.2 - row * 0.45;
     const frondW = 1.35 - row * 0.1;
     for (const side of [-1, 1]) {
-      // Upper dark-green frond pair
       const upperLeaf = buildLeafBladeMesh(frondLen, frondW, 0.24, darkGreenMat);
       upperLeaf.position.copy(anchor);
       upperLeaf.rotation.order = 'YXZ';
@@ -1389,7 +1676,6 @@ function buildSceptileDetails(palette, texLib) {
       upperLeaf.rotation.z = side * -0.45;
       tailGroup.add(upperLeaf);
 
-      // Lower medium-green frond pair
       const lowerLeaf = buildLeafBladeMesh(frondLen * 0.92, frondW * 0.92, 0.22, midGreenMat);
       lowerLeaf.position.copy(anchor).add(new THREE.Vector3(0, -0.35, 0));
       lowerLeaf.rotation.order = 'YXZ';
@@ -1401,10 +1687,10 @@ function buildSceptileDetails(palette, texLib) {
   }
   ornamentGroup.add(tailGroup);
 
-  // 3. Compact Forearms + Forearm Leaf Blades (x = ±4.5 cm, y = 13.5 cm, angled cleanly forward-side)
+  // 3. Compact Forearms + Dual Wrist Leaf Blades (x = ±4.2 cm, y = 14.2 cm)
   for (const side of [-1, 1]) {
     const armPivot = new THREE.Group();
-    armPivot.position.set(side * 4.2, 13.8, 0.95);
+    armPivot.position.set(side * 4.2, 14.2, 0.95);
     armPivot.rotation.z = side * 0.55;
     armPivot.rotation.y = side * -0.45;
 
@@ -1414,7 +1700,6 @@ function buildSceptileDetails(palette, texLib) {
     arm.rotation.x = 0.55;
     armPivot.add(arm);
 
-    // 2 layered leaf blades rising off forearm
     const bladePrimary = buildLeafBladeMesh(3.4, 1.15, 0.26, midGreenMat);
     bladePrimary.position.set(side * 1.25, 0.15, 0.95);
     bladePrimary.rotation.z = side * -0.32;
@@ -1430,13 +1715,13 @@ function buildSceptileDetails(palette, texLib) {
     ornamentGroup.add(armPivot);
   }
 
-  tagZone(ornamentGroup, 'zone-6', 'Sceptile Back Seeds, Leaf Tail & Forearm Blades');
+  configureShadowMesh(ornamentGroup, 'Sceptile Back Seeds, Leaf Tail & Wrist Blades');
   return { faceGroup, ornamentGroup, rimCrestGroup: null };
 }
 
 /**
- * Builds Dragonite-specific Face (Zone 3), Head Crest Antennae + Horn (Zone 4),
- * and Wings / Tail / Arms / Feet with White Claws (Zone 5).
+ * Builds Dragonite Face, Upper Collar Antennae + Horn (above Silicone Ring),
+ * Wings, Plump Ribbed Tail, Stubby Arms & Feet with 3 White Claws each.
  */
 function buildDragoniteDetails(palette, texLib) {
   const faceGroup = new THREE.Group();
@@ -1449,91 +1734,86 @@ function buildDragoniteDetails(palette, texLib) {
   const tealMat = createYarnMaterial(palette.wingTeal, texLib, 3, 3);
   const clawMat = createYarnMaterial(palette.clawWhite, texLib, 1.5, 1.5);
   const oliveMat = new THREE.MeshStandardMaterial({ color: palette.irisOlive, roughness: 0.45 });
-  oliveMat.userData.originalEmissive = new THREE.Color(0x000000);
   const blackMat = new THREE.MeshStandardMaterial({ color: '#141414', roughness: 0.4 });
-  blackMat.userData.originalEmissive = new THREE.Color(0x000000);
   const whiteMat = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.3 });
-  whiteMat.userData.originalEmissive = new THREE.Color(0x000000);
 
-  // --- ZONE 3: Friendly Oval Dragonite Eyes + Rounded Crochet Snout (y = 20.6–24.2 cm) ---
+  // Friendly Oval Eyes on convex shoulder (y = 22.85 cm)
+  const eyeY = 22.85;
+  const eyeSurfaceR = getCaseOuterRadiusAtY(eyeY) - 0.14;
   for (const side of [-1, 1]) {
     const eyePivot = new THREE.Group();
-    const angle = side * 0.54; // ~31 deg from +Z
-    const rSurface = 3.74;
-    eyePivot.position.set(Math.sin(angle) * rSurface, 22.9, Math.cos(angle) * rSurface);
+    const angle = side * 0.54;
+    eyePivot.position.set(Math.sin(angle) * eyeSurfaceR, eyeY, Math.cos(angle) * eyeSurfaceR);
     eyePivot.rotation.y = angle;
-    eyePivot.rotation.x = -0.22;
+    eyePivot.rotation.x = -0.26;
 
-    const sclera = new THREE.Mesh(new THREE.SphereGeometry(0.62, 16, 14), whiteMat);
-    sclera.scale.set(0.75, 1.25, 0.35);
+    const sclera = new THREE.Mesh(new THREE.SphereGeometry(0.60, 16, 14), whiteMat);
+    sclera.scale.set(0.75, 1.24, 0.35);
     eyePivot.add(sclera);
 
-    const iris = new THREE.Mesh(new THREE.SphereGeometry(0.46, 14, 12), oliveMat);
-    iris.scale.set(0.72, 1.16, 0.35);
+    const iris = new THREE.Mesh(new THREE.SphereGeometry(0.45, 14, 12), oliveMat);
+    iris.scale.set(0.72, 1.15, 0.35);
     iris.position.set(side * -0.06, -0.04, 0.08);
     eyePivot.add(iris);
 
-    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 10), blackMat);
-    pupil.scale.set(0.72, 1.14, 0.38);
+    const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.27, 12, 10), blackMat);
+    pupil.scale.set(0.72, 1.12, 0.38);
     pupil.position.set(side * -0.06, -0.04, 0.14);
     eyePivot.add(pupil);
 
     const glint = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), whiteMat);
-    glint.position.set(side * 0.08, 0.24, 0.22);
+    glint.position.set(side * 0.08, 0.22, 0.22);
     eyePivot.add(glint);
 
     faceGroup.add(eyePivot);
   }
 
-  // Soft plump crochet snout projecting slightly at front center (y = 21.0–22.4 cm)
-  const snout = new THREE.Mesh(new THREE.SphereGeometry(1.38, 22, 18), orangeMat);
-  snout.scale.set(1.25, 0.82, 0.88);
-  snout.position.set(0, 21.55, 3.88);
+  // Plump rounded crochet snout projecting forward (y = 21.75 cm)
+  const snoutZ = getCaseOuterRadiusAtY(21.75) - 0.25;
+  const snout = new THREE.Mesh(new THREE.SphereGeometry(1.36, 22, 18), orangeMat);
+  snout.scale.set(1.24, 0.80, 0.86);
+  snout.position.set(0, 21.75, snoutZ);
   faceGroup.add(snout);
 
   for (const side of [-1, 1]) {
     const nostril = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), blackMat);
-    nostril.position.set(side * 0.44, 21.75, 5.02);
+    nostril.position.set(side * 0.42, 21.95, snoutZ + 1.12);
     faceGroup.add(nostril);
   }
 
   const smileCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-0.78, 21.25, 4.78),
-    new THREE.Vector3(0, 20.92, 5.04),
-    new THREE.Vector3(0.78, 21.25, 4.78)
+    new THREE.Vector3(-0.76, 21.48, snoutZ + 0.88),
+    new THREE.Vector3(0, 21.14, snoutZ + 1.14),
+    new THREE.Vector3(0.76, 21.48, snoutZ + 0.88)
   ]);
-  const smile = new THREE.Mesh(new THREE.TubeGeometry(smileCurve, 16, 0.055, 8, false), blackMat);
-  faceGroup.add(smile);
+  faceGroup.add(new THREE.Mesh(new THREE.TubeGeometry(smileCurve, 16, 0.055, 8, false), blackMat));
 
-  tagZone(faceGroup, 'zone-5', 'Dragonite Oval Eyes & Crochet Snout (20.6–25.5 cm)');
+  configureShadowMesh(faceGroup, 'Dragonite Oval Eyes & Crochet Snout');
 
-  // --- ZONE 5 RIM CREST: 2 Wavy Cream Antennae + 1 Small Central Horn at y = 27.6 cm front rim ---
-  // Positioned carefully at r = 3.26 cm forward (+Z) so the Ø 6.5 cm screw cap twists unobstructed!
-  const horn = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.45, 14), orangeMat);
-  horn.position.set(0, 28.35, 3.12);
-  horn.rotation.x = 0.24;
+  // Top Cuff Horn & 2 S-Curved Cream Antennae anchored at top crochet rim (y = 27.82 cm, above Silicone Ring)
+  // Positioned forward of Ø 5.9 cm screw cap so unscrewing lid remains effortless
+  const horn = new THREE.Mesh(new THREE.ConeGeometry(0.38, 1.32, 14), orangeMat);
+  horn.position.set(0, 28.42, 3.16);
+  horn.rotation.x = 0.30;
   rimCrestGroup.add(horn);
 
   for (const side of [-1, 1]) {
     const antCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(side * 1.42, 27.62, 2.90),
-      new THREE.Vector3(side * 1.78, 28.85, 3.22),
-      new THREE.Vector3(side * 2.55, 29.75, 2.75),
-      new THREE.Vector3(side * 3.15, 30.85, 2.25)
+      new THREE.Vector3(side * 1.38, 27.78, 2.86),
+      new THREE.Vector3(side * 1.82, 28.92, 3.18),
+      new THREE.Vector3(side * 2.58, 29.85, 2.72),
+      new THREE.Vector3(side * 3.16, 30.88, 2.25)
     ]);
-    const ant = new THREE.Mesh(new THREE.TubeGeometry(antCurve, 24, 0.19, 10, false), creamMat);
-    rimCrestGroup.add(ant);
+    rimCrestGroup.add(new THREE.Mesh(new THREE.TubeGeometry(antCurve, 24, 0.18, 10, false), creamMat));
   }
-  tagZone(rimCrestGroup, 'zone-5', 'Dragonite Rim Antennae & Small Horn (27.6 cm)');
+  configureShadowMesh(rimCrestGroup, 'Dragonite Rim Antennae & Forehead Horn');
 
-  // --- ZONE 5: Wings, Plump Ribbed Tail, Stubby Arms & Feet with 3 White Claws ---
-  // 1. Pair of Sculpted Wings (y = 14.5–22.5 cm on upper back)
+  // Sculpted 2-Tone Wings (y = 14.5 - 22.5 cm, upper back)
   for (const side of [-1, 1]) {
     const wingPivot = new THREE.Group();
-    wingPivot.position.set(side * 1.75, 17.6, -3.95);
-    wingPivot.rotation.y = side * -0.58; // angles cleanly outward/backward without touching side straps
+    wingPivot.position.set(side * 1.75, 17.8, -3.95);
+    wingPivot.rotation.y = side * -0.58;
 
-    // Inner deep-teal crocheted wing membrane
     const membraneShape = new THREE.Shape();
     membraneShape.moveTo(0, 0.2);
     membraneShape.quadraticCurveTo(side * 1.6, 3.2, side * 3.6, 4.4);
@@ -1550,10 +1830,8 @@ function buildDragoniteDetails(palette, texLib) {
       bevelSegments: 2
     });
     membraneGeom.translate(0, 0, -0.12);
-    const membraneMesh = new THREE.Mesh(membraneGeom, tealMat);
-    wingPivot.add(membraneMesh);
+    wingPivot.add(new THREE.Mesh(membraneGeom, tealMat));
 
-    // Golden-orange crochet wing bone frame wrapping top + tip
     const boneCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(0, 0.2, 0),
       new THREE.Vector3(side * 1.8, 3.3, -0.1),
@@ -1561,10 +1839,8 @@ function buildDragoniteDetails(palette, texLib) {
       new THREE.Vector3(side * 5.2, 2.2, -0.12),
       new THREE.Vector3(side * 6.05, -2.6, -0.05)
     ]);
-    const boneMesh = new THREE.Mesh(new THREE.TubeGeometry(boneCurve, 28, 0.30, 10, false), orangeMat);
-    wingPivot.add(boneMesh);
+    wingPivot.add(new THREE.Mesh(new THREE.TubeGeometry(boneCurve, 28, 0.30, 10, false), orangeMat));
 
-    // Top wing thumb claw spur
     const wingSpur = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.95, 10), orangeMat);
     wingSpur.position.set(side * 3.6, 4.75, -0.15);
     wingSpur.rotation.z = side * -0.25;
@@ -1573,7 +1849,7 @@ function buildDragoniteDetails(palette, texLib) {
     ornamentGroup.add(wingPivot);
   }
 
-  // 2. Plump Dragonite Tail (y = 1.8–11.5 cm, back -Z) with Cream Ribbed Underside
+  // Plump Tail with Cream Ribbed Underside (y = 2.0 - 11.5 cm, back -Z)
   const dTailGroup = new THREE.Group();
   const tailSpine = new THREE.CatmullRomCurve3([
     new THREE.Vector3(0, 4.2, -3.95),
@@ -1582,12 +1858,11 @@ function buildDragoniteDetails(palette, texLib) {
     new THREE.Vector3(0, 7.2, -11.8)
   ]);
   const tailSamples = tailSpine.getSpacedPoints(18);
-  const radii = [2.25, 1.85, 1.25, 0.42];
   for (let i = 0; i < tailSamples.length - 1; i++) {
     const t0 = i / (tailSamples.length - 1);
     const t1 = (i + 1) / (tailSamples.length - 1);
-    const r0 = THREE.MathUtils.lerp(radii[0], radii[3], Math.pow(t0, 0.85));
-    const r1 = THREE.MathUtils.lerp(radii[0], radii[3], Math.pow(t1, 0.85));
+    const r0 = THREE.MathUtils.lerp(2.25, 0.42, Math.pow(t0, 0.85));
+    const r1 = THREE.MathUtils.lerp(2.25, 0.42, Math.pow(t1, 0.85));
     const segLen = tailSamples[i].distanceTo(tailSamples[i + 1]);
 
     const seg = new THREE.Mesh(new THREE.CylinderGeometry(r1, r0, segLen + 0.25, 18), orangeMat);
@@ -1599,7 +1874,6 @@ function buildDragoniteDetails(palette, texLib) {
     );
     dTailGroup.add(seg);
 
-    // Cream ribbed underside patch along bottom of each tail segment
     if (i < tailSamples.length - 2) {
       const under = new THREE.Mesh(new THREE.SphereGeometry(r0 * 0.86, 14, 12), i % 2 === 0 ? creamMat : ribMat);
       under.scale.set(0.85, 0.45, 0.85);
@@ -1609,11 +1883,10 @@ function buildDragoniteDetails(palette, texLib) {
   }
   ornamentGroup.add(dTailGroup);
 
-  // 3. Stubby Crochet Arms & Feet with 3 Tiny White Claws each
+  // Stubby Arms & Feet with 3 Tiny White Claws each
   for (const side of [-1, 1]) {
-    // Stubby arm (y = 13.6 cm)
     const armPivot = new THREE.Group();
-    armPivot.position.set(side * 4.2, 13.8, 1.35);
+    armPivot.position.set(side * 4.2, 14.0, 1.35);
     armPivot.rotation.z = side * 0.48;
     armPivot.rotation.x = 0.38;
 
@@ -1631,7 +1904,6 @@ function buildDragoniteDetails(palette, texLib) {
     }
     ornamentGroup.add(armPivot);
 
-    // Chunky rounded foot resting at y = 0 with 3 white claws
     const footPivot = new THREE.Group();
     footPivot.position.set(side * 2.85, 0.95, 3.15);
     footPivot.rotation.y = side * 0.32;
@@ -1649,51 +1921,49 @@ function buildDragoniteDetails(palette, texLib) {
     ornamentGroup.add(footPivot);
   }
 
-  tagZone(ornamentGroup, 'zone-6', 'Dragonite Wings, Ribbed Tail, Arms & Claws');
+  configureShadowMesh(ornamentGroup, 'Dragonite Wings, Ribbed Tail, Arms & Claws');
   return { faceGroup, rimCrestGroup, ornamentGroup };
 }
 
-/**
- * Creates a crisp CAD-style floating dimension badge sprite (no depth occlusion).
- */
-function createDimensionBadgeSprite(text, accentColor = '#e8a849') {
+function createDimensionBadgeSprite(text, accentColor = '#d8a353') {
   const canvas = document.createElement('canvas');
-  canvas.width = 420;
+  canvas.width = 460;
   canvas.height = 96;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = 'rgba(13, 18, 26, 0.90)';
+  ctx.fillStyle = 'rgba(20, 22, 26, 0.92)';
   ctx.beginPath();
-  ctx.roundRect(8, 12, 404, 72, 22);
+  ctx.roundRect(8, 12, 444, 72, 14);
   ctx.fill();
 
   ctx.strokeStyle = accentColor;
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 3.5;
   ctx.stroke();
 
-  ctx.fillStyle = '#f3f6fa';
-  ctx.font = '700 32px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+  ctx.fillStyle = '#f2efe9';
+  ctx.font = '700 30px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(text, 210, 49);
+  ctx.fillText(text, 230, 49);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   const mat = new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true });
   const sprite = new THREE.Sprite(mat);
-  sprite.scale.set(4.8, 1.08, 1);
+  sprite.scale.set(5.4, 1.12, 1);
   sprite.renderOrder = 20;
   return sprite;
 }
 
 /**
- * Builds CAD dimension line segments + floating cm callouts for crocheters.
+ * Builds CAD dimension line segments + floating cm callouts for crocheters:
+ * Ø Dasar: 8.0 cm, Ø Leher: 5.7 cm, Tinggi Case: 28.0 cm, Total Botol: 32.0 cm, Silicone Ring + Kait
  */
 export function buildDimensionGuides() {
   const group = new THREE.Group();
   group.name = 'dimension-guides';
 
-  const addCalloutLine = (p1, p2, labelText, badgeOffset, color = '#e8a849') => {
+  const addCalloutLine = (p1, p2, labelText, badgeOffset, color = '#d8a353') => {
     const lineMat = new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.9 });
     const dir = p2.clone().sub(p1).normalize();
     const perp = Math.abs(dir.y) > 0.8 ? new THREE.Vector3(0.38, 0, 0) : new THREE.Vector3(0, 0.38, 0);
@@ -1711,57 +1981,51 @@ export function buildDimensionGuides() {
       pts[2], pts[3],
       pts[4], pts[5]
     ]);
-    const lines = new THREE.LineSegments(lineGeom, lineMat);
-    group.add(lines);
+    group.add(new THREE.LineSegments(lineGeom, lineMat));
 
     const sprite = createDimensionBadgeSprite(labelText, color);
     sprite.position.copy(p1.clone().lerp(p2, 0.5)).add(badgeOffset);
     group.add(sprite);
   };
 
-  // Base Diameter Ø 8.0 cm
   addCalloutLine(
     new THREE.Vector3(-4.0, 0.2, 6.8),
     new THREE.Vector3(4.0, 0.2, 6.8),
     'Ø Dasar: 8.0 cm',
     new THREE.Vector3(0, 1.15, 0.4),
-    '#6ec494'
+    '#70b088'
   );
 
-  // Neck Diameter Ø 5.8 cm
   addCalloutLine(
-    new THREE.Vector3(-2.9, 26.8, 5.8),
-    new THREE.Vector3(2.9, 26.8, 5.8),
-    'Ø Leher: 5.8 cm',
-    new THREE.Vector3(0, 1.45, 0.4),
-    '#66d2ff'
+    new THREE.Vector3(-2.85, 27.2, 5.8),
+    new THREE.Vector3(2.85, 27.2, 5.8),
+    'Leher: Ø 5.7 cm',
+    new THREE.Vector3(0, 1.55, 0.4),
+    '#a3b8c9'
   );
 
-  // Case Height 28.0 cm
   addCalloutLine(
     new THREE.Vector3(-7.4, 0.0, 0),
     new THREE.Vector3(-7.4, 28.0, 0),
-    'Tinggi Case: 28.0 cm',
+    'Case: 28.0 cm',
     new THREE.Vector3(-3.3, -3.5, 0),
-    '#e8a849'
+    '#d8a353'
   );
 
-  // Total Tumbler + Cap Height 32.0 cm
   addCalloutLine(
     new THREE.Vector3(-9.6, 0.0, -2.0),
     new THREE.Vector3(-9.6, 32.0, -2.0),
-    'Total Botol: 32.0 cm',
+    'Total: 32.0 cm',
     new THREE.Vector3(-3.3, 9.5, 0),
-    '#b8c7da'
+    '#c9c4b8'
   );
 
-  // D-Ring 1.5 cm callout on right shoulder
   addCalloutLine(
-    new THREE.Vector3(5.3, 24.45, -0.75),
-    new THREE.Vector3(5.3, 24.45, 0.75),
-    'D-Ring: 1.5 cm',
-    new THREE.Vector3(3.3, -1.2, 0),
-    '#e8a849'
+    new THREE.Vector3(4.38, 26.85, 0),
+    new THREE.Vector3(4.38, 27.60, 0),
+    'Silicone Ring + Kait',
+    new THREE.Vector3(3.6, 0.1, 0),
+    '#d8a353'
   );
 
   return group;
@@ -1769,18 +2033,17 @@ export function buildDimensionGuides() {
 
 /**
  * Builds a complete, self-contained 1:1 cm Character Case Assembly
- * including the 1L Cuculemon tumbler, 6-zone crochet assembly, and interchangeable straps.
+ * including the 1L Cuculemon tumbler, crochet shell, Silicone Neck Ring + woven drawstring,
+ * and interchangeable straps hooked directly to the molded silicone ear loops.
  */
 export function buildCharacterTumblerAssembly(characterId, texLib) {
   const palette = CHARACTER_PALETTES[characterId];
   const root = new THREE.Group();
   root.name = `assembly-${characterId}`;
 
-  // 1L Tumbler
   const tumbler = buildTumbler1L();
   root.add(tumbler.group);
 
-  // Crochet Case & Strap Container (hidden when "Bottle Only" toggle is active)
   const caseGroup = new THREE.Group();
   caseGroup.name = `case-${characterId}`;
 
@@ -1799,7 +2062,7 @@ export function buildCharacterTumblerAssembly(characterId, texLib) {
   if (details.rimCrestGroup) caseGroup.add(details.rimCrestGroup);
   caseGroup.add(details.ornamentGroup);
 
-  const straps = buildInterchangeableStraps(characterId, palette, texLib, hanger.dRingMountPoints);
+  const straps = buildInterchangeableStraps(characterId, palette, texLib, hanger.earMountPoints);
   caseGroup.add(straps.shortGroup);
   caseGroup.add(straps.longGroup);
 
@@ -1818,32 +2081,12 @@ export function buildCharacterTumblerAssembly(characterId, texLib) {
     tumbler.setXRay(enabled);
     for (const m of shell.sleeveMeshes) {
       m.material.transparent = enabled;
-      m.material.opacity = enabled ? 0.38 : 1.0;
+      m.material.opacity = enabled ? 0.36 : 1.0;
       m.material.depthWrite = !enabled;
       m.material.needsUpdate = true;
     }
-    shell.evaDisc.material.userData.originalEmissive = new THREE.Color(enabled ? '#4db6ff' : '#142636');
-    shell.evaDisc.material.userData.originalEmissiveIntensity = enabled ? 0.85 : 0.3;
-    shell.evaDisc.material.emissive.copy(shell.evaDisc.material.userData.originalEmissive);
-    shell.evaDisc.material.emissiveIntensity = shell.evaDisc.material.userData.originalEmissiveIntensity;
-  }
-
-  function highlightZone(activeZoneId) {
-    caseGroup.traverse((child) => {
-      if (!child.isMesh || !child.material) return;
-      const mats = Array.isArray(child.material) ? child.material : [child.material];
-      const isMatch = Boolean(activeZoneId) && child.userData.zoneId === activeZoneId;
-      for (const mat of mats) {
-        if (!('emissive' in mat)) continue;
-        if (isMatch) {
-          mat.emissive.set('#e8a849');
-          mat.emissiveIntensity = 0.24;
-        } else {
-          mat.emissive.copy(mat.userData.originalEmissive || new THREE.Color(0x000000));
-          mat.emissiveIntensity = mat.userData.originalEmissiveIntensity ?? 0.0;
-        }
-      }
-    });
+    shell.evaDisc.material.emissive.set(enabled ? '#4db6ff' : '#142636');
+    shell.evaDisc.material.emissiveIntensity = enabled ? 0.85 : 0.3;
   }
 
   setStrapMode('short');
@@ -1857,7 +2100,6 @@ export function buildCharacterTumblerAssembly(characterId, texLib) {
     },
     setStrapMode,
     setBottleOnly,
-    setXRay,
-    highlightZone
+    setXRay
   };
 }
