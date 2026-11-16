@@ -650,10 +650,9 @@ document.getElementById('btn-export-png').addEventListener('click', exportStudio
 document.getElementById('rail-btn-export').addEventListener('click', exportStudioPng);
 
 // =====================================================================
-// Native Modals (BOM + Cara Kirim ke Perajut) + Light-Dismiss Fallback
+// Native Modal (BOM) + Light-Dismiss Fallback
 // =====================================================================
 const bomDialog = document.getElementById('bom-dialog');
-const shareDialog = document.getElementById('share-dialog');
 const bomTableBody = document.getElementById('bom-table-body');
 const bomTotalIdr = document.getElementById('bom-total-idr');
 let activeBomFilter = 'active';
@@ -733,14 +732,8 @@ function openBomDialog() {
   bomDialog.showModal();
 }
 
-function openShareDialog() {
-  shareDialog.showModal();
-}
-
 document.getElementById('btn-open-bom').addEventListener('click', openBomDialog);
 document.getElementById('rail-btn-bom').addEventListener('click', openBomDialog);
-document.getElementById('btn-open-share').addEventListener('click', openShareDialog);
-document.getElementById('rail-btn-share').addEventListener('click', openShareDialog);
 
 // Light-dismiss fallback for browsers without native <dialog closedby="any">
 if (!('closedBy' in HTMLDialogElement.prototype)) {

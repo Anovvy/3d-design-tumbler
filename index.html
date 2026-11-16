@@ -30,9 +30,6 @@
       </div>
 
       <div class="header-actions">
-        <button type="button" id="btn-open-share" class="btn btn-utility">
-          Cara Kirim ke Perajut
-        </button>
         <button type="button" id="btn-open-bom" class="btn btn-utility">
           BOM &amp; Link Shopee
         </button>
@@ -175,14 +172,9 @@
           <button type="button" id="rail-btn-bom" class="btn btn-utility btn-block">
             BOM &amp; Link Shopee
           </button>
-          <div class="action-row">
-            <button type="button" id="rail-btn-export" class="btn btn-accent">
-              Export PNG
-            </button>
-            <button type="button" id="rail-btn-share" class="btn btn-subtle">
-              Cara Kirim ke Perajut
-            </button>
-          </div>
+          <button type="button" id="rail-btn-export" class="btn btn-accent btn-block">
+            Export PNG
+          </button>
         </section>
       </aside>
     </main>
@@ -236,53 +228,6 @@
           <div class="summary-stat">
             <span class="summary-label">Dimensi Referensi Botol 1L</span>
             <strong class="rail-mono">Bodi Ø 8.0 cm &bull; Leher Ø 5.7 cm &bull; Case 28.0 cm</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  </dialog>
-
-  <!-- Native Modal Dialog: Cara Kirim ke Perajut -->
-  <dialog id="share-dialog" closedby="any" aria-labelledby="share-dialog-title">
-    <div class="dialog-shell dialog-shell-narrow">
-      <div class="dialog-header">
-        <div>
-          <h2 id="share-dialog-title">Cara Kirim Desain 3D &amp; Spec ke Perajut</h2>
-          <p class="dialog-subtitle">
-            Panduan praktis agar perajut bisa memutar model 3D sendiri dan membaca detail dimensi, benang, serta BOM dengan akurat.
-          </p>
-        </div>
-        <form method="dialog">
-          <button type="submit" class="btn btn-subtle" autofocus>Tutup</button>
-        </form>
-      </div>
-
-      <div class="dialog-body">
-        <ol class="share-steps">
-          <li>
-            <strong>Ekspor Foto Referensi Multi-Sudut (PNG)</strong>
-            <p>
-              Gunakan preset kamera <em>Depan</em>, <em>Belakang</em>, <em>Kanan</em>, dan <em>Detail Leher</em> (dengan <em>Garis Dimensi</em> aktif), lalu klik <strong>Export PNG</strong> pada setiap sudut untuk dikirim langsung lewat WhatsApp sebagai referensi visual cepat.
-            </p>
-          </li>
-          <li>
-            <strong>Kirim Folder Proyek Web 3D Interaktif</strong>
-            <p>
-              Zip seluruh folder proyek (termasuk <code>index.html</code>, folder <code>src/</code>, dan <code>ref/</code>) atau unggah ke hosting statis (GitHub Pages / Netlify Drop / Vercel). Perajut cukup membuka link atau menjalankan server lokal (<code>npx serve</code> / <code>python -m http.server</code>) untuk memutar model 360&deg; dari HP maupun laptop.
-            </p>
-          </li>
-          <li>
-            <strong>Sertakan Panduan Cetak / PDF &amp; Daftar BOM Shopee</strong>
-            <p>
-              Cetak halaman panduan pola atau ekspor ke PDF (<code>Ctrl+P</code> &rarr; <em>Save as PDF</em>) bersama daftar komponen dari tombol <strong>BOM &amp; Link Shopee</strong> agar perajut memesan Silicone Neck Ring wide-mouth (Ø 5.5–6.0 cm) dan paracord 4 mm yang tepat.
-            </p>
-          </li>
-        </ol>
-
-        <div class="dialog-footer-summary">
-          <div class="summary-stat">
-            <span class="summary-label">Catatan Penting untuk Perajut</span>
-            <strong>Kait tali 30 cm &amp; 100 cm dipasang langsung ke lubang kuping Silicone Neck Ring (4 titik ikat benang Polycherry).</strong>
           </div>
         </div>
       </div>
